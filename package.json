@@ -10,6 +10,7 @@
     "@fastify/autoload": "^5.0.0",
     "@fastify/sensible": "^4.1.0",
     "@fastify/static": "^6.5.0",
+    "@hexlet/chat-server": "^1.1.6",
     "fastify": "^4.0.0",
     "fastify-cli": "^4.4.0",
     "fastify-plugin": "^3.0.0"
