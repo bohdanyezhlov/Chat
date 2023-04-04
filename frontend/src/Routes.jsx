@@ -1,19 +1,11 @@
-// import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import App from './Components/App';
-import Login from './Components/Login';
-import ErrorPage from './Components/ErrorPage';
+const apiPath = '/api/v1';
 
-function AppRoutes() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
-    </Router>
-  );
-}
-
-export default AppRoutes;
+// eslint-disable-next-line import/no-anonymous-default-export
+export default {
+  loginPath: () => [apiPath, 'login'].join('/'),
+  signupPath: () => [apiPath, 'signup'].join('/'),
+  dataPath: () => [apiPath, 'data'].join('/'),
+  chatPagePath: () => '/',
+  loginPagePath: () => '/login',
+  signupPagePath: () => '/signup',
+};
