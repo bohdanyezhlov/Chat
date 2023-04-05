@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import { Button, Navbar } from 'react-bootstrap';
 
+import ChatPage from './ChatPage';
 import LoginPage from './LoginPage';
 import NotFoundPage from './NotFoundPage';
 import AuthContext from '../contexts';
@@ -30,18 +31,18 @@ const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  // const getAuthHeader = () => {
-  //   const userData = JSON.parse(localStorage.getItem('user'));
+  const getAuthHeader = () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
 
-  //   return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
-  // };
+    return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
+  };
 
   return (
     <AuthContext.Provider
       value={{
         logIn,
         logOut,
-        // getAuthHeader,
+        getAuthHeader,
         user,
       }}
     >
@@ -67,10 +68,6 @@ const AuthButton = () => {
   return auth.user && <Button onClick={auth.logOut}>Выйти</Button>;
 };
 
-const Chat = () => {
-  return <div>Chat</div>;
-};
-
 const App = () => (
   <AuthProvider>
     <Router>
@@ -89,7 +86,7 @@ const App = () => (
             path={routes.chatPagePath()}
             element={
               <PrivateRoute>
-                <Chat />
+                <ChatPage />
               </PrivateRoute>
             }
           />

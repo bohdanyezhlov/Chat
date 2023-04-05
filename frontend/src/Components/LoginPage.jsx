@@ -29,7 +29,7 @@ const Login = () => {
     initialValues: { username: '', password: '' },
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       setAuthFailed(false);
-
+      // setSubmitting(true); // TODO: do i need it?
       try {
         const response = await axios.post(routes.loginPath(), values);
         auth.logIn(response.data);
