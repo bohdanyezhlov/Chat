@@ -1,11 +1,10 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const channelsReducer = createSlice({
   name: 'channels',
   initialState: { channels: [], currentChannelId: null },
   reducers: {
     setInitialState(state, { payload }) {
-      console.log(payload, current(state));
       const { channels, currentChannelId } = payload;
       state.channels = channels;
       state.currentChannelId = currentChannelId;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,11 +9,11 @@ import {
 } from 'react-router-dom';
 import { Button, Navbar } from 'react-bootstrap';
 
-import ChatPage from './ChatPage';
+import ChatPage from './ChatPage/ChatPage';
 import LoginPage from './LoginPage';
 import NotFoundPage from './NotFoundPage';
-import AuthContext from '../contexts';
-import useAuth from '../hooks';
+import { AuthContext } from '../contexts';
+import { useAuth } from '../hooks';
 import routes from '../routes';
 
 const AuthProvider = ({ children }) => {

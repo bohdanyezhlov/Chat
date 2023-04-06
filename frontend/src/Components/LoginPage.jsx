@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import routes from '../routes';
-import useAuth from '../hooks';
+import { useAuth } from '../hooks';
 import avatarImages from '../assets/avatar.jpg';
 
 const LoginImage = () => {
@@ -29,7 +29,7 @@ const Login = () => {
     initialValues: { username: '', password: '' },
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       setAuthFailed(false);
-      // setSubmitting(true); // TODO: do i need it?
+
       try {
         const response = await axios.post(routes.loginPath(), values);
         auth.logIn(response.data);
