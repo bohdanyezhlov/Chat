@@ -20,8 +20,10 @@ const EnterNewMessage = ({ channelId }) => {
   const socket = useSocket();
 
   useEffect(() => {
-    inputRef.current.focus(); // TODO: individual useEffect?
+    inputRef.current.focus();
+  }, [channelId]);
 
+  useEffect(() => {
     socket.on('newMessage', (payload) => {
       dispatch(addMessage({ message: payload }));
     });

@@ -3,18 +3,35 @@ import { useSelector } from 'react-redux';
 import EnterNewMessage from './EnterNewMessage';
 
 const Messages = () => {
-  const { messages } = useSelector((state) => state.messages);
-  const { currentChannelId } = useSelector((state) => state.channels);
   const bottomMessageRef = useRef();
+  const { channels, currentChannelId } = useSelector((state) => state.channels);
+  const { messages } = useSelector((state) => state.messages);
+
+  // TODO: get messages for current channel
+  const messagesForCurrentChannel = messages.filter(
+    (m) => m.channelId === currentChannelId
+  );
+
+  const [{ name: channelName }] = channels.filter(
+    (c) => c.id === currentChannelId
+  );
 
   useEffect(() => {
     bottomMessageRef.current.scrollIntoView({ behavior: 'auto' });
-  }, [messages]);
+  }, [messagesForCurrentChannel]);
 
   return (
     <>
+      <div className="bg-light mb-4 p-3 shadow-sm small">
+        <p className="m-0">
+          <strong># {channelName}</strong>
+        </p>
+        <span className="text-muted">
+          {messagesForCurrentChannel.length} сообщений
+        </span>
+      </div>
       <div className="chat-messages overflow-auto px-5">
-        {messages.map(({ username, body, id }) => (
+        {messagesForCurrentChannel.map(({ username, body, id }) => (
           <div className="text-break mb-2" key={id}>
             <strong>{username}</strong>: {body}
           </div>

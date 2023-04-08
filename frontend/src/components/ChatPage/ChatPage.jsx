@@ -1,16 +1,20 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setInitialState as setChannelsInitialState } from '../../slices/channelsSlice';
-import { setInitialState as setMessagesInitialState } from '../../slices/messagesSlice';
+import { setInitialState as setMessagesInitialState } from '../../slices/messagesSlice'; // TODO: extraReducer?
 import axios from 'axios';
 import { useEffect } from 'react';
 import routes from '../../routes';
 import { useAuth } from '../../hooks';
 import Channels from './Channels';
 import Messages from './Messages';
+import { Spinner } from 'react-bootstrap';
 
 const ChatPage = () => {
+  // TODO: order
   const dispatch = useDispatch();
   const auth = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,13 +25,22 @@ const ChatPage = () => {
 
         dispatch(setChannelsInitialState(response.data));
         dispatch(setMessagesInitialState(response.data));
+        setIsLoading(false);
       } catch (error) {
         console.log(error.message);
       }
     };
 
     fetchData();
-  }, [auth, dispatch]); // TODO:
+  }, [auth, dispatch]); // TODO: [empty or why]
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center mt-5">
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
@@ -37,19 +50,10 @@ const ChatPage = () => {
             <strong>Каналы</strong>
             {/* button add channel */}
           </div>
-
           <Channels />
         </div>
         <div className="col p-0 h-100">
           <div className="d-flex flex-column h-100">
-            <div className="bg-light mb-4 p-3 shadow-sm small">
-              <p className="m-0">
-                <strong># Active channel name</strong>
-              </p>
-              <span className="text-muted">
-                0 Counter messages in current channel
-              </span>
-            </div>
             <Messages />
           </div>
         </div>
