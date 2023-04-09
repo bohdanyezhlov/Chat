@@ -1,4 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+// eslint-disable-next-line no-unused-vars
+import { createSlice, current } from '@reduxjs/toolkit';
+import { removeChannel, renameChannel } from './channelsSlice';
+import { remove } from 'lodash';
 
 const messagesReducer = createSlice({
   name: 'messages',
@@ -9,9 +12,17 @@ const messagesReducer = createSlice({
       state.messages = messages;
     },
     addMessage(state, { payload }) {
+      console.log('addMessage', current(state), payload);
       const { message } = payload;
       state.messages.push(message);
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(removeChannel, (state, { payload }) => {
+      const { currentChannelId } = payload;
+      console.log('extra removeChannel', current(state), payload);
+      remove(state.messages, (m) => m.channelId === currentChannelId.id);
+    });
   },
 });
 

@@ -1,19 +1,24 @@
 import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { addMessage } from '../../slices/messagesSlice';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth, useSocket } from '../../hooks';
+import { useDispatch } from 'react-redux';
+import { addMessage } from '../../slices/messagesSlice';
+import {
+  addChannel,
+  removeChannel,
+  renameChannel,
+} from '../../slices/channelsSlice';
 
 const validationSchema = Yup.object().shape({
   body: Yup.string().trim().required('Body is required'),
 });
 
 const EnterNewMessage = ({ channelId }) => {
-  const dispatch = useDispatch();
   const inputRef = useRef();
+  const dispatch = useDispatch();
   const {
     user: { username },
   } = useAuth();
@@ -32,6 +37,36 @@ const EnterNewMessage = ({ channelId }) => {
       socket.off('newMessage');
     };
   }, [socket, dispatch]);
+  //FIXME: why here
+  useEffect(() => {
+    socket.on('newChannel', (payload) => {
+      dispatch(addChannel({ name: payload }));
+    });
+
+    return () => {
+      socket.off('newChannel');
+    };
+  }, [socket, dispatch]);
+
+  useEffect(() => {
+    socket.on('removeChannel', (payload) => {
+      dispatch(removeChannel({ currentChannelId: payload }));
+    });
+
+    return () => {
+      socket.off('removeChannel');
+    };
+  }, [socket, dispatch]);
+
+  useEffect(() => {
+    socket.on('renameChannel', (payload) => {
+      dispatch(renameChannel({ updatedChannel: payload }));
+    });
+
+    return () => {
+      socket.off('renameChannel');
+    };
+  }, [socket, dispatch]);
 
   const formik = useFormik({
     initialValues: { body: '' },
@@ -44,7 +79,7 @@ const EnterNewMessage = ({ channelId }) => {
       };
 
       try {
-        await socket.emit('newMessage', message);
+        await socket.volatile.emit('newMessage', message);
         formik.resetForm();
       } catch (error) {
         console.log(error);
@@ -73,6 +108,7 @@ const EnterNewMessage = ({ channelId }) => {
           variant="group-vertical"
           disabled={formik.touched.body && formik.errors.body}
         >
+          {/* FIXME: remove border (disabled) */}
           <ArrowRightSquare size={20} />
           <span className="visually-hidden">Отправить</span>
         </Button>

@@ -69,33 +69,35 @@ const AuthButton = () => {
 };
 
 const App = () => (
-  <AuthProvider>
-    <Router>
-      <div className="d-flex flex-column h-100">
-        <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-          <div className="container">
-            <Navbar.Brand as={Link} to={routes.chatPagePath()}>
-              Hexlet Chat
-            </Navbar.Brand>
-            <AuthButton />
-          </div>
-        </Navbar>
+  <>
+    <AuthProvider>
+      <Router>
+        <div className="d-flex flex-column h-100">
+          <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
+            <div className="container">
+              <Navbar.Brand as={Link} to={routes.chatPagePath()}>
+                Hexlet Chat
+              </Navbar.Brand>
+              <AuthButton />
+            </div>
+          </Navbar>
 
-        <Routes>
-          <Route
-            path={routes.chatPagePath()}
-            element={
-              <PrivateRoute>
-                <ChatPage />
-              </PrivateRoute>
-            }
-          />
-          <Route path="*" element={<NotFoundPage />} />
-          <Route path={routes.loginPagePath()} element={<LoginPage />} />
-        </Routes>
-      </div>
-    </Router>
-  </AuthProvider>
+          <Routes>
+            <Route
+              path={routes.chatPagePath()}
+              element={
+                <PrivateRoute>
+                  <ChatPage />
+                </PrivateRoute>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
+            <Route path={routes.loginPagePath()} element={<LoginPage />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
+  </>
 );
 
 export default App;

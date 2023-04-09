@@ -4,9 +4,9 @@ import { Provider } from 'react-redux';
 import { io } from 'socket.io-client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-import App from './components/App';
 import store from './slices';
 import { SocketContext } from './contexts';
+import App from './components/App';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
