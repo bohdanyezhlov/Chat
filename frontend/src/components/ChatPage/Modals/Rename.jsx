@@ -67,6 +67,7 @@ const Rename = (props) => {
         <form onSubmit={formik.handleSubmit}>
           <FormGroup>
             <FormControl
+              id="name"
               className="mb-2"
               ref={inputRef}
               onChange={formik.handleChange}
