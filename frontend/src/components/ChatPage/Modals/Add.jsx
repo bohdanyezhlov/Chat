@@ -1,13 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useSocket } from '../../../hooks';
-import { Modal, FormGroup, FormControl, Button } from 'react-bootstrap';
+import { Modal, FormGroup, FormControl, Form, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setCurrentChannel } from '../../../slices/channelsSlice';
 
 const Add = (props) => {
+  const { t } = useTranslation();
   const { onHide } = props;
   const dispatch = useDispatch();
   const socket = useSocket();
@@ -22,10 +24,10 @@ const Add = (props) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .trim()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .notOneOf(channelsNames, 'Должно быть уникальным')
-      .required('Обязательное поле'),
+      .min(3, 'modals.min')
+      .max(20, 'modals.max')
+      .notOneOf(channelsNames, 'modals.uniq')
+      .required('modals.required'),
   });
 
   const formik = useFormik({
@@ -48,7 +50,6 @@ const Add = (props) => {
       } catch (error) {
         formik.setErrors({ name: error.message }); // FIXME: show error after submit
         console.log(error);
-      } finally {
       }
     },
   });
@@ -56,7 +57,7 @@ const Add = (props) => {
   return (
     <Modal show>
       <Modal.Header closeButton onHide={onHide}>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('modals.add')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -70,6 +71,12 @@ const Add = (props) => {
               value={formik.values.name}
               name="name"
             />
+            <Form.Label className="visually-hidden">
+              {t('modals.channelName')}
+            </Form.Label>
+            {formik.touched.name && formik.errors.name && (
+              <div className="invalid-tooltip">{t(formik.errors.name)}</div>
+            )}
           </FormGroup>
           <div className="d-flex justify-content-end">
             <Button
@@ -77,9 +84,9 @@ const Add = (props) => {
               className="me-2 btn-secondary"
               onClick={onHide}
             >
-              Отменить
+              {t('modals.cancel')}
             </Button>
-            <Button type="submit">Отправить</Button>
+            <Button type="submit">{t('modals.submit')}</Button>
           </div>
         </form>
       </Modal.Body>

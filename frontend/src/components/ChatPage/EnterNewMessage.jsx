@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
@@ -13,10 +14,11 @@ import {
 } from '../../slices/channelsSlice';
 
 const validationSchema = Yup.object().shape({
-  body: Yup.string().trim().required('Body is required'),
+  body: Yup.string().trim().required('required'),
 });
 
 const EnterNewMessage = ({ channelId }) => {
+  const { t } = useTranslation();
   const inputRef = useRef();
   const dispatch = useDispatch();
   const {
@@ -28,6 +30,7 @@ const EnterNewMessage = ({ channelId }) => {
     inputRef.current.focus();
   }, [channelId]);
 
+  // TODO: move to init.js
   useEffect(() => {
     socket.on('newMessage', (payload) => {
       dispatch(addMessage({ message: payload }));
@@ -37,7 +40,7 @@ const EnterNewMessage = ({ channelId }) => {
       socket.off('newMessage');
     };
   }, [socket, dispatch]);
-  //FIXME: why here
+
   useEffect(() => {
     socket.on('newChannel', (payload) => {
       dispatch(addChannel({ name: payload }));
@@ -95,13 +98,13 @@ const EnterNewMessage = ({ channelId }) => {
         <Form.Control
           name="body"
           className="border-0 p-0 ps-2"
-          placeholder="Введите сообщение..."
+          placeholder={t('chat.enterNewMessage')}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           disabled={formik.isSubmitting}
           value={formik.values.body}
           ref={inputRef}
-          aria-label="Новое сообщение"
+          aria-label={t('chat.newMessage')}
         />
         <Button
           type="submit"
@@ -110,7 +113,7 @@ const EnterNewMessage = ({ channelId }) => {
         >
           {/* FIXME: remove border (disabled) */}
           <ArrowRightSquare size={20} />
-          <span className="visually-hidden">Отправить</span>
+          <span className="visually-hidden">{t('chat.send')}</span>
         </Button>
       </InputGroup>
     </Form>

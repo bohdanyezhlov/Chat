@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { createSlice, current } from '@reduxjs/toolkit';
-import { removeChannel, renameChannel } from './channelsSlice';
+import { removeChannel } from './channelsSlice';
 import { remove } from 'lodash';
 
 const messagesReducer = createSlice({

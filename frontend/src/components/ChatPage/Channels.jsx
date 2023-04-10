@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentChannel } from '../../slices/channelsSlice';
+import { useTranslation } from 'react-i18next';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
 import getModal from './Modals';
@@ -17,6 +18,7 @@ const renderModal = ({ modalInfo, hideModal, setItems }) => {
 };
 
 const Channels = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { channels } = useSelector((state) => state.channels);
   const currentChannelId = useSelector(
@@ -33,7 +35,7 @@ const Channels = () => {
   return (
     <>
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-        <strong>Каналы</strong>
+        <strong>{t('channels.channels')}</strong>
         <button
           className="p-0 text-primary btn btn-group-vertical"
           onClick={() => showModal('adding')}
@@ -53,10 +55,9 @@ const Channels = () => {
                   <button
                     onClick={() => handleSetCurrentChannel(id)}
                     type="button"
-                    className={`w-100 rounded-0 text-start btn ${
+                    className={`w-100 rounded-0 text-start text-truncate btn ${
                       isActive ? ' btn-secondary' : ''
-                    } ${nameLength > 12 ? 'text-truncate' : ''}`}
-                    // FIXME: nameLength ? 5
+                    }`}
                   >
                     <span className="me-1">#</span>
                     {name}
@@ -66,14 +67,16 @@ const Channels = () => {
                     className="flex-grow-0"
                     variant={isActive ? ' btn-secondary' : null}
                   >
-                    <span className="visually-hidden">Управление каналом</span>
+                    <span className="visually-hidden">
+                      {t('channels.menu')}
+                    </span>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => showModal('removing', id)}>
-                      Удалить
+                      {t('channels.remove')}
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => showModal('renaming', id)}>
-                      Переименовать
+                      {t('channels.rename')}
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

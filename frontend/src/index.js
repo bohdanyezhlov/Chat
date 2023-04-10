@@ -1,23 +1,15 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { io } from 'socket.io-client';
+import init from './init';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-import store from './slices';
-import { SocketContext } from './contexts';
-import App from './components/App';
 
-const container = document.getElementById('root');
-const root = createRoot(container);
-const socket = io();
+const runApp = async () => {
+  const container = document.getElementById('root');
+  const root = createRoot(container);
+  const Init = await init();
 
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <SocketContext.Provider value={socket}>
-        <App />
-      </SocketContext.Provider>
-    </Provider>
-  </React.StrictMode>
-);
+  root.render(<React.StrictMode>{Init}</React.StrictMode>);
+};
+
+runApp();

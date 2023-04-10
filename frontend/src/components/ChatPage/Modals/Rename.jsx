@@ -3,11 +3,13 @@ import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useSocket } from '../../../hooks';
-import { Modal, FormGroup, FormControl, Button } from 'react-bootstrap';
+import { Modal, FormGroup, FormControl, Form, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 const Rename = (props) => {
   const { onHide } = props;
   const id = props.modalInfo.item;
+  const { t } = useTranslation();
   const socket = useSocket();
   const { channels } = useSelector((state) => state.channels);
   const channelsNames = channels.map(({ name }) => name);
@@ -22,10 +24,10 @@ const Rename = (props) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .trim()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .notOneOf(channelsNames, 'Должно быть уникальным')
-      .required('Обязательное поле'),
+      .min(3, 'modals.min')
+      .max(20, 'modals.max')
+      .notOneOf(channelsNames, 'modals.uniq')
+      .required('modals.required'),
   });
 
   const formik = useFormik({
@@ -50,7 +52,7 @@ const Rename = (props) => {
   return (
     <Modal show>
       <Modal.Header closeButton onHide={onHide}>
-        <Modal.Title>Переименовать канал</Modal.Title>
+        <Modal.Title>{t('modals.rename')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -64,6 +66,9 @@ const Rename = (props) => {
               value={formik.values.name}
               name="name"
             />
+            <Form.Label className="visually-hidden">
+              {t('modals.channelName')}
+            </Form.Label>
           </FormGroup>
           <div className="d-flex justify-content-end">
             <Button
@@ -71,9 +76,9 @@ const Rename = (props) => {
               className="me-2 btn-secondary"
               onClick={onHide}
             >
-              Отменить
+              {t('modals.cancel')}
             </Button>
-            <Button type="submit">Отправить</Button>
+            <Button type="submit">{t('modals.submit')}</Button>
           </div>
         </form>
       </Modal.Body>

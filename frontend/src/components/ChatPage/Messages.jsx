@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import EnterNewMessage from './EnterNewMessage';
 
 const Messages = () => {
+  const { t } = useTranslation();
   const bottomMessageRef = useRef();
   const { channels, currentChannelId } = useSelector((state) => state.channels);
   const { messages } = useSelector((state) => state.messages);
@@ -26,7 +28,9 @@ const Messages = () => {
           <strong># {channelName}</strong>
         </p>
         <span className="text-muted">
-          {messagesForCurrentChannel.length} сообщений
+          {`${messagesForCurrentChannel.length} ${t('chat.messageCount', {
+            count: messagesForCurrentChannel.length,
+          })}`}
         </span>
       </div>
       <div className="chat-messages overflow-auto px-5">
