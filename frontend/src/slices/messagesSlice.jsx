@@ -9,7 +9,10 @@ const messagesReducer = createSlice({
   reducers: {
     setInitialState(state, { payload }) {
       const { messages } = payload;
-      state.messages = messages;
+      return {
+        ...state,
+        messages,
+      };
     },
     addMessage(state, { payload }) {
       console.log('addMessage', current(state), payload);

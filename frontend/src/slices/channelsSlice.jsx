@@ -1,6 +1,5 @@
-// eslint-disable-next-line no-unused-vars
 import { createSlice, current } from '@reduxjs/toolkit';
-import { remove } from 'lodash';
+// import { remove } from 'lodash';
 
 const defaultCurrentChannelId = 1;
 
@@ -10,13 +9,17 @@ const channelsReducer = createSlice({
   reducers: {
     setInitialState(state, { payload }) {
       const { channels, currentChannelId } = payload;
-      state.channels = channels;
-      state.currentChannelId = currentChannelId;
+      return {
+        ...state,
+        channels,
+        currentChannelId,
+      };
     },
     setCurrentChannel(state, { payload }) {
       console.log('setCurrentChannel', 'from', current(state), 'to', payload);
+      const newState = { ...state };
       const { currentChannelId } = payload;
-      state.currentChannelId = currentChannelId;
+      newState.currentChannelId = currentChannelId;
     },
     addChannel(state, { payload }) {
       console.log('addChannel', 'from', current(state), 'to', payload);
@@ -25,11 +28,12 @@ const channelsReducer = createSlice({
     },
     removeChannel(state, { payload }) {
       console.log('removeChannel', current(state.channels), payload);
-      const { currentChannelId } = payload;
-      remove(state.channels, (c) => c.id === currentChannelId.id);
-      if (state.currentChannelId === currentChannelId.id) {
-        state.currentChannelId = defaultCurrentChannelId;
-      }
+      const { currentChannelId: channelIdToRemove } = payload;
+      const channels = state.channels.filter((c) => c.id !== channelIdToRemove.id);
+      const currentChannelId = state.currentChannelId === channelIdToRemove.id
+        ? defaultCurrentChannelId
+        : state.currentChannelId;
+      return { ...state, channels, currentChannelId };
     },
     renameChannel(state, { payload }) {
       console.log('renameChannel', current(state.channels), payload);
