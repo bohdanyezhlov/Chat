@@ -4,11 +4,11 @@ import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 import routes from '../routes';
 import { useAuth } from '../hooks';
 import loginImage from '../assets/loginImage.jpg';
-import { toast } from 'react-toastify';
-import { useRollbar } from '@rollbar/react';
 
 const Login = () => {
   const rollbar = useRollbar();
@@ -25,7 +25,7 @@ const Login = () => {
 
   const formik = useFormik({
     initialValues: { username: '', password: '' },
-    onSubmit: async (values, { setErrors }) => {
+    onSubmit: async (values) => {
       setAuthFailed(false);
 
       try {
@@ -43,7 +43,7 @@ const Login = () => {
           inputRef.current.select();
           rollbar.error(t('login.authFailed'), error, values);
           return;
-        } else if (error.isAxiosError) {
+        } if (error.isAxiosError) {
           toast.error(t('errors.network'));
           return;
         }
@@ -129,7 +129,8 @@ const Login = () => {
             </div>
             <div className="card-footer p-4">
               <div className="text-center">
-                <span>{t('login.newToChat')}</span>{' '}
+                <span>{t('login.newToChat')}</span>
+                {' '}
                 <Link to={routes.signupPagePath()}>{t('login.signup')}</Link>
               </div>
             </div>

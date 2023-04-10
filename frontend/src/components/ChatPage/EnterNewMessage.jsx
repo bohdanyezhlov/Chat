@@ -4,15 +4,15 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useAuth, useSocket } from '../../hooks';
 import { useDispatch } from 'react-redux';
+import { useRollbar } from '@rollbar/react';
+import { useAuth, useSocket } from '../../hooks';
 import { addMessage } from '../../slices/messagesSlice';
 import {
   addChannel,
   removeChannel,
   renameChannel,
 } from '../../slices/channelsSlice';
-import { useRollbar } from '@rollbar/react';
 
 const validationSchema = Yup.object().shape({
   body: Yup.string().trim().required('required'),

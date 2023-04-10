@@ -1,8 +1,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { Provider, ErrorBoundary } from '@rollbar/react'; // Provider imports 'rollbar'
 import init from './init';
 import './index.css';
-import { Provider, ErrorBoundary } from '@rollbar/react'; // Provider imports 'rollbar'
 
 const runApp = async () => {
   const container = document.getElementById('root');
@@ -19,7 +19,7 @@ const runApp = async () => {
       <ErrorBoundary>
         <React.StrictMode>{Init}</React.StrictMode>
       </ErrorBoundary>
-    </Provider>
+    </Provider>,
   );
 };
 

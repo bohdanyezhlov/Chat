@@ -2,6 +2,7 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import i18next from 'i18next';
 import io from 'socket.io-client';
 import { Provider } from 'react-redux';
+import leoProfanity from 'leo-profanity';
 import resources from './locales';
 import store from './slices';
 // import { addMessage } from './slices/messagesSlice';
@@ -12,7 +13,6 @@ import store from './slices';
 // } from './slices/channelsSlice';
 import { SocketContext } from './contexts';
 import App from './components/App';
-import leoProfanity from 'leo-profanity';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async () => {

@@ -2,15 +2,17 @@ import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useSocket } from '../../../hooks';
-import { Modal, FormGroup, FormControl, Form, Button } from 'react-bootstrap';
+import {
+  Modal, FormGroup, FormControl, Form, Button,
+} from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
+import { useSocket } from '../../../hooks';
 
 const Rename = (props) => {
   const { onHide } = props;
-  const id = props.modalInfo.item;
+  const { modalInfo: { item: id } } = props;
   const { t } = useTranslation();
   const socket = useSocket();
   const { channels } = useSelector((state) => state.channels);

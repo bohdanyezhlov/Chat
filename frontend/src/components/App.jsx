@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -21,7 +21,7 @@ import routes from '../routes';
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));
   const [user, setUser] = useState(
-    currentUser ? { username: currentUser.username } : null
+    currentUser ? { username: currentUser.username } : null,
   );
   const logIn = (userData) => {
     localStorage.setItem('user', JSON.stringify(userData));
@@ -39,14 +39,19 @@ const AuthProvider = ({ children }) => {
     return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
   };
 
+  const authService = useMemo(
+    () => ({
+      logIn,
+      logOut,
+      getAuthHeader,
+      user,
+    }),
+    [user],
+  );
+
   return (
     <AuthContext.Provider
-      value={{
-        logIn,
-        logOut,
-        getAuthHeader,
-        user,
-      }}
+      value={authService}
     >
       {children}
     </AuthContext.Provider>
@@ -75,37 +80,35 @@ const App = () => {
   const { t } = useTranslation();
 
   return (
-    <>
-      <AuthProvider>
-        <Router>
-          <div className="d-flex flex-column h-100">
-            <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-              <div className="container">
-                <Navbar.Brand as={Link} to={routes.chatPagePath()}>
-                  {t('hexletChat')}
-                </Navbar.Brand>
-                <AuthButton />
-              </div>
-            </Navbar>
+    <AuthProvider>
+      <Router>
+        <div className="d-flex flex-column h-100">
+          <Navbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
+            <div className="container">
+              <Navbar.Brand as={Link} to={routes.chatPagePath()}>
+                {t('hexletChat')}
+              </Navbar.Brand>
+              <AuthButton />
+            </div>
+          </Navbar>
 
-            <Routes>
-              <Route
-                path={routes.chatPagePath()}
-                element={
-                  <PrivateRoute>
-                    <ChatPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="*" element={<NotFoundPage />} />
-              <Route path={routes.loginPagePath()} element={<LoginPage />} />
-              <Route path={routes.signupPagePath()} element={<SignupPage />} />
-            </Routes>
-            <ToastContainer />
-          </div>
-        </Router>
-      </AuthProvider>
-    </>
+          <Routes>
+            <Route
+              path={routes.chatPagePath()}
+              element={(
+                <PrivateRoute>
+                  <ChatPage />
+                </PrivateRoute>
+                )}
+            />
+            <Route path="*" element={<NotFoundPage />} />
+            <Route path={routes.loginPagePath()} element={<LoginPage />} />
+            <Route path={routes.signupPagePath()} element={<SignupPage />} />
+          </Routes>
+          <ToastContainer />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 };
 

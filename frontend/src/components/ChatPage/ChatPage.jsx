@@ -1,15 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import { Spinner } from 'react-bootstrap';
+import { useRollbar } from '@rollbar/react';
 import { setInitialState as setChannelsInitialState } from '../../slices/channelsSlice';
 import { setInitialState as setMessagesInitialState } from '../../slices/messagesSlice'; // TODO: extraReducer?
-import axios from 'axios';
-import { useEffect } from 'react';
 import routes from '../../routes';
 import { useAuth } from '../../hooks';
 import Channels from './Channels';
 import Messages from './Messages';
-import { Spinner } from 'react-bootstrap';
-import { useRollbar } from '@rollbar/react';
 
 const ChatPage = () => {
   // TODO: order

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentChannel } from '../../slices/channelsSlice';
 import { useTranslation } from 'react-i18next';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
-import getModal from './Modals';
 import leoProfanity from 'leo-profanity';
+import getModal from './Modals';
+import { setCurrentChannel } from '../../slices/channelsSlice';
 
 const renderModal = ({ modalInfo, hideModal, setItems }) => {
   if (!modalInfo.type) {
@@ -23,7 +23,7 @@ const Channels = () => {
   const dispatch = useDispatch();
   const { channels } = useSelector((state) => state.channels);
   const currentChannelId = useSelector(
-    (state) => state.channels.currentChannelId
+    (state) => state.channels.currentChannelId,
   );
   const [modalInfo, setModalInfo] = useState({ type: null, item: null });
   const hideModal = () => setModalInfo({ type: null, item: null });
@@ -38,6 +38,7 @@ const Channels = () => {
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
         <strong>{t('channels.channels')}</strong>
         <button
+          type="button"
           className="p-0 text-primary btn btn-group-vertical"
           onClick={() => showModal('adding')}
         >

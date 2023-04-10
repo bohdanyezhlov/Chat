@@ -1,14 +1,14 @@
-import { useSocket } from '../../../hooks';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
+import { useSocket } from '../../../hooks';
 
 const Remove = (props) => {
   const { t } = useTranslation();
   const socket = useSocket();
   const { onHide } = props;
-  const id = props.modalInfo.item;
+  const { modalInfo: { item: id } } = props;
   const rollbar = useRollbar();
 
   const handleSubmit = async () => {

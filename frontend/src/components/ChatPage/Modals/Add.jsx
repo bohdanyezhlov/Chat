@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useSocket } from '../../../hooks';
-import { Modal, FormGroup, FormControl, Form, Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { setCurrentChannel } from '../../../slices/channelsSlice';
+import {
+  Modal, FormGroup, FormControl, Form, Button,
+} from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
+import { useSocket } from '../../../hooks';
+import { setCurrentChannel } from '../../../slices/channelsSlice';
 
 const Add = (props) => {
   const { t } = useTranslation();
@@ -83,7 +84,7 @@ const Add = (props) => {
             <Form.Label className="visually-hidden" htmlFor="name">
               {t('modals.channelName')}
             </Form.Label>
-            {<div className="invalid-feedback">{t(formik.errors.name)}</div>}
+            <div className="invalid-feedback">{t(formik.errors.name)}</div>
           </FormGroup>
           <div className="d-flex justify-content-end">
             <Button
