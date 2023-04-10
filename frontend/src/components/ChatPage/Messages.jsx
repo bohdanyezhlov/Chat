@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import EnterNewMessage from './EnterNewMessage';
+import leoProfanity from 'leo-profanity';
 
 const Messages = () => {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ const Messages = () => {
     <>
       <div className="bg-light mb-4 p-3 shadow-sm small">
         <p className="m-0">
-          <strong># {channelName}</strong>
+          <strong># {leoProfanity.clean(channelName)}</strong>
         </p>
         <span className="text-muted">
           {`${messagesForCurrentChannel.length} ${t('chat.messageCount', {
@@ -36,7 +37,7 @@ const Messages = () => {
       <div className="chat-messages overflow-auto px-5">
         {messagesForCurrentChannel.map(({ username, body, id }) => (
           <div className="text-break mb-2" key={id}>
-            <strong>{username}</strong>: {body}
+            <strong>{username}</strong>: {leoProfanity.clean(body)}
           </div>
         ))}
         <div ref={bottomMessageRef} />

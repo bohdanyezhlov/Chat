@@ -12,6 +12,7 @@ import store from './slices';
 // } from './slices/channelsSlice';
 import { SocketContext } from './contexts';
 import App from './components/App';
+import leoProfanity from 'leo-profanity';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async () => {
@@ -23,6 +24,10 @@ export default async () => {
   });
 
   const socket = io();
+
+  leoProfanity.add(leoProfanity.getDictionary('en'));
+  leoProfanity.add(leoProfanity.getDictionary('fr'));
+  leoProfanity.add(leoProfanity.getDictionary('ru'));
 
   // socket.on('newMessage', (payload) => {
   //   dispatch(addMessage({ message: payload }));

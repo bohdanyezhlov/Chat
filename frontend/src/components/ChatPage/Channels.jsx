@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { Dropdown, ButtonGroup } from 'react-bootstrap';
 import getModal from './Modals';
+import leoProfanity from 'leo-profanity';
 
 const renderModal = ({ modalInfo, hideModal, setItems }) => {
   if (!modalInfo.type) {
@@ -46,7 +47,6 @@ const Channels = () => {
       <ul className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
         {channels.map(({ id, name, removable }) => {
           const isActive = id === currentChannelId;
-          const nameLength = name.length;
 
           return (
             <li key={id} className="nav-item w-100">
@@ -60,7 +60,7 @@ const Channels = () => {
                     }`}
                   >
                     <span className="me-1">#</span>
-                    {name}
+                    {leoProfanity.clean(name)}
                   </button>
                   <Dropdown.Toggle
                     split
@@ -84,13 +84,13 @@ const Channels = () => {
                 <button
                   onClick={() => handleSetCurrentChannel(id)}
                   type="button"
-                  className={`w-100 rounded-0 text-start btn${
+                  className={`w-100 rounded-0 text-start text-truncate btn${
                     isActive ? ' btn-secondary' : ''
-                  } ${nameLength > 12 ? 'text-truncate' : ''}`}
+                  }`}
                   // FIXME: nameLength ? 5
                 >
                   <span className="me-1">#</span>
-                  {name}
+                  {leoProfanity.clean(name)}
                 </button>
               )}
             </li>
