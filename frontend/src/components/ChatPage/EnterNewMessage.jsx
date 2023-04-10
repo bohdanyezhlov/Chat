@@ -12,12 +12,14 @@ import {
   removeChannel,
   renameChannel,
 } from '../../slices/channelsSlice';
+import { useRollbar } from '@rollbar/react';
 
 const validationSchema = Yup.object().shape({
   body: Yup.string().trim().required('required'),
 });
 
 const EnterNewMessage = ({ channelId }) => {
+  const rollbar = useRollbar();
   const { t } = useTranslation();
   const inputRef = useRef();
   const dispatch = useDispatch();
@@ -85,6 +87,7 @@ const EnterNewMessage = ({ channelId }) => {
         await socket.volatile.emit('newMessage', message);
         formik.resetForm();
       } catch (error) {
+        rollbar.error('sending new message', error, body);
         console.log(error);
       } finally {
         formik.setSubmitting(false);

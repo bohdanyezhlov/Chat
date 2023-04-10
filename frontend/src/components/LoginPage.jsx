@@ -8,8 +8,10 @@ import routes from '../routes';
 import { useAuth } from '../hooks';
 import loginImage from '../assets/loginImage.jpg';
 import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 
 const Login = () => {
+  const rollbar = useRollbar();
   const auth = useAuth();
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
@@ -38,14 +40,17 @@ const Login = () => {
           setErrors({ password: 'login.authFailed' });
           setAuthFailed(true);
           inputRef.current.select();
+          rollbar.error(t('login.authFailed'), error, values);
           return;
         } else if (error.isAxiosError) {
           toast.error(t('errors.network'));
+          // rollbar.error(t('errors.network'), error, values); // FIXME: is it working?
           // setErrors({ password: 'errors.network' });
           // setAuthFailed(true);
           return;
         }
         setErrors({ password: 'errors.unknown' }); // TODO: or toast?
+        rollbar.error(t('errors.unknown'), error, values);
         throw error;
       } finally {
         setSubmitting(false);

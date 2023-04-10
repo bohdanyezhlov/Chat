@@ -9,8 +9,10 @@ import { Form, Button } from 'react-bootstrap';
 import signupImage from '../assets/signupImage.jpg';
 import routes from '../routes';
 import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 
 const Signup = () => {
+  const rollbar = useRollbar();
   const auth = useAuth();
   const [signupFailed, setSignupFailed] = useState(false);
   const inputRef = useRef();
@@ -55,6 +57,7 @@ const Signup = () => {
           setErrors({ confirmPassword: 'signup.alreadyExists' });
           setSignupFailed(true);
           inputRef.current.select();
+          rollbar.error(t('signup.alreadyExists'), error, values);
           return;
         } else if (error.isAxiosError) {
           toast.error(t('errors.network'));

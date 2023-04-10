@@ -6,6 +6,7 @@ import { useSocket } from '../../../hooks';
 import { Modal, FormGroup, FormControl, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 
 const Rename = (props) => {
   const { onHide } = props;
@@ -16,6 +17,7 @@ const Rename = (props) => {
   const channelsNames = channels.map(({ name }) => name);
   const [currentChannel] = channels.filter((c) => c.id === id);
   const currentChannelName = currentChannel.name;
+  const rollbar = useRollbar();
 
   const inputRef = useRef();
   useEffect(() => {
@@ -45,6 +47,7 @@ const Rename = (props) => {
         onHide();
         toast.success(t('channels.renamed'));
       } catch (error) {
+        rollbar.error('channel renaming', error, name);
         formik.setErrors({ name: error.message }); // FIXME: show error after submit
         console.log(error);
       }
@@ -71,6 +74,9 @@ const Rename = (props) => {
             <Form.Label className="visually-hidden">
               {t('modals.channelName')}
             </Form.Label>
+            {formik.touched.name && formik.errors.name && (
+              <div className="invalid-tooltip">{t(formik.errors.name)}</div>
+            )}
           </FormGroup>
           <div className="d-flex justify-content-end">
             <Button

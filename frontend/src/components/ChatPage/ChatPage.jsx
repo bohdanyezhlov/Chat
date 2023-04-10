@@ -9,9 +9,11 @@ import { useAuth } from '../../hooks';
 import Channels from './Channels';
 import Messages from './Messages';
 import { Spinner } from 'react-bootstrap';
+import { useRollbar } from '@rollbar/react';
 
 const ChatPage = () => {
   // TODO: order
+  const rollbar = useRollbar();
   const dispatch = useDispatch();
   const auth = useAuth();
   const [isLoading, setIsLoading] = useState(true);
@@ -27,12 +29,13 @@ const ChatPage = () => {
         dispatch(setMessagesInitialState(response.data));
         setIsLoading(false);
       } catch (error) {
+        rollbar.error('getting init data', error);
         console.log(error.message);
       }
     };
 
     fetchData();
-  }, [auth, dispatch]); // TODO: [empty or why]
+  }, [auth, dispatch, rollbar]); // TODO: [empty or why]
 
   return isLoading ? (
     <div className="d-flex justify-content-center mt-5">

@@ -8,6 +8,7 @@ import { Modal, FormGroup, FormControl, Form, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setCurrentChannel } from '../../../slices/channelsSlice';
 import { toast } from 'react-toastify';
+import { useRollbar } from '@rollbar/react';
 
 const Add = (props) => {
   const { t } = useTranslation();
@@ -16,6 +17,7 @@ const Add = (props) => {
   const socket = useSocket();
   const { channels } = useSelector((state) => state.channels);
   const channelsNames = channels.map(({ name }) => name);
+  const rollbar = useRollbar();
 
   const inputRef = useRef();
   useEffect(() => {
@@ -50,6 +52,7 @@ const Add = (props) => {
         formik.resetForm();
         onHide();
       } catch (error) {
+        rollbar.error('channel adding', error, name);
         formik.setErrors({ name: error.message }); // FIXME: show error after submit
         console.log(error);
       }
