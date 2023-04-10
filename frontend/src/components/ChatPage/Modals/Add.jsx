@@ -36,6 +36,8 @@ const Add = (props) => {
   const formik = useFormik({
     initialValues: { name: '' },
     validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: async ({ name }) => {
       const newChannel = {
         name,
@@ -44,16 +46,17 @@ const Add = (props) => {
       try {
         await socket.volatile.emit('newChannel', newChannel, ({ data }) => {
           setTimeout(() => {
-            // FIXME: timeout?
+            // FIXME: timeout? adding channel with slow 3G fails
             dispatch(setCurrentChannel({ currentChannelId: data.id }));
             toast.success(t('channels.created'));
-          }, 30);
+          }, 50);
         });
         formik.resetForm();
         onHide();
       } catch (error) {
         rollbar.error('channel adding', error, name);
-        formik.setErrors({ name: error.message }); // FIXME: show error after submit
+        formik.setErrors({ name: error.message });
+        formik.isSubmitting(false); // FIXME: finally? or formik does it
         console.log(error);
       }
     },
@@ -75,13 +78,12 @@ const Add = (props) => {
               onBlur={formik.handleBlur}
               value={formik.values.name}
               name="name"
+              isInvalid={formik.errors.name && formik.touched.name}
             />
-            <Form.Label className="visually-hidden">
+            <Form.Label className="visually-hidden" htmlFor="name">
               {t('modals.channelName')}
             </Form.Label>
-            {formik.touched.name && formik.errors.name && (
-              <div className="invalid-tooltip">{t(formik.errors.name)}</div>
-            )}
+            {<div className="invalid-feedback">{t(formik.errors.name)}</div>}
           </FormGroup>
           <div className="d-flex justify-content-end">
             <Button
@@ -91,7 +93,9 @@ const Add = (props) => {
             >
               {t('modals.cancel')}
             </Button>
-            <Button type="submit">{t('modals.submit')}</Button>
+            <Button type="submit" disabled={formik.isSubmitting}>
+              {t('modals.submit')}
+            </Button>
           </div>
         </form>
       </Modal.Body>

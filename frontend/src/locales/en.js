@@ -18,6 +18,7 @@ export default {
       newToChat: 'New to chat?',
       authFailed: 'username or password is incorrect',
       header: 'Login',
+      required: 'Required',
     },
     modals: {
       add: 'Add channel',

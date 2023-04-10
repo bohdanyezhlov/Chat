@@ -36,6 +36,8 @@ const Rename = (props) => {
   const formik = useFormik({
     initialValues: { name: currentChannelName },
     validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: async ({ name }) => {
       const newChannelName = {
         id, // FIXME: channelId is not working
@@ -48,7 +50,8 @@ const Rename = (props) => {
         toast.success(t('channels.renamed'));
       } catch (error) {
         rollbar.error('channel renaming', error, name);
-        formik.setErrors({ name: error.message }); // FIXME: show error after submit
+        formik.setErrors({ name: error.message });
+        formik.isSubmitting(false); // FIXME: finally? or formik does it
         console.log(error);
       }
     },
@@ -70,12 +73,13 @@ const Rename = (props) => {
               onBlur={formik.handleBlur}
               value={formik.values.name}
               name="name"
+              isInvalid={formik.errors.name && formik.touched.name}
             />
-            <Form.Label className="visually-hidden">
+            <Form.Label className="visually-hidden" htmlFor="name">
               {t('modals.channelName')}
             </Form.Label>
             {formik.touched.name && formik.errors.name && (
-              <div className="invalid-tooltip">{t(formik.errors.name)}</div>
+              <div className="invalid-feedback">{t(formik.errors.name)}</div>
             )}
           </FormGroup>
           <div className="d-flex justify-content-end">
@@ -86,7 +90,9 @@ const Rename = (props) => {
             >
               {t('modals.cancel')}
             </Button>
-            <Button type="submit">{t('modals.submit')}</Button>
+            <Button type="submit" disabled={formik.isSubmitting}>
+              {t('modals.submit')}
+            </Button>
           </div>
         </form>
       </Modal.Body>

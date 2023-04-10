@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useFormik } from 'formik';
@@ -16,7 +16,6 @@ const Signup = () => {
   const auth = useAuth();
   const [signupFailed, setSignupFailed] = useState(false);
   const inputRef = useRef();
-  const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -48,11 +47,9 @@ const Signup = () => {
       try {
         const response = await axios.post(routes.signupPath(), values);
         auth.logIn(response.data);
-        const { from } = location.state || {
-          from: { pathname: routes.chatPagePath() },
-        };
-        navigate(from);
+        navigate(routes.chatPagePath());
       } catch (error) {
+        console.log(error);
         if (error.isAxiosError && error.response.status === 409) {
           setErrors({ confirmPassword: 'signup.alreadyExists' });
           setSignupFailed(true);
@@ -62,13 +59,11 @@ const Signup = () => {
         } else if (error.isAxiosError) {
           toast.error(t('errors.network'));
           // setErrors({ confirmPassword: 'errors.network' });
-          // setSignupFailed(true);
+          setSignupFailed(true); // FIXME: remove it?
           return;
         }
-        setErrors({ confirmPassword: 'errors.unknown' });
+        // setErrors({ confirmPassword: 'errors.unknown' }); // FIXME: ?
         throw error;
-      } finally {
-        setSubmitting(false);
       }
     },
   });
@@ -103,7 +98,10 @@ const Signup = () => {
                   value={formik.values.username}
                   ref={inputRef}
                   required
-                  isInvalid={signupFailed}
+                  isInvalid={
+                    signupFailed ||
+                    (formik.touched.username && formik.errors.username)
+                  }
                 />
                 <Form.Label>{t('signup.username')}</Form.Label>
                 {formik.touched.username && formik.errors.username && (
@@ -125,7 +123,10 @@ const Signup = () => {
                   onBlur={formik.handleBlur}
                   value={formik.values.password}
                   required
-                  isInvalid={signupFailed}
+                  isInvalid={
+                    signupFailed ||
+                    (formik.touched.password && formik.errors.password)
+                  }
                 />
                 <Form.Label>{t('signup.password')}</Form.Label>
                 {formik.touched.password && formik.errors.password && (
@@ -147,7 +148,11 @@ const Signup = () => {
                   onBlur={formik.handleBlur}
                   value={formik.values.confirmPassword}
                   required
-                  isInvalid={signupFailed}
+                  isInvalid={
+                    signupFailed ||
+                    (formik.touched.confirmPassword &&
+                      formik.errors.confirmPassword)
+                  }
                 />
                 <Form.Label>{t('signup.confirm')}</Form.Label>
                 {formik.touched.confirmPassword &&

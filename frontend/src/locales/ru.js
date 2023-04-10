@@ -18,6 +18,7 @@ export default {
       newToChat: 'Нет аккаунта?',
       authFailed: 'Неверные имя пользователя или пароль',
       header: 'Войти',
+      required: 'Обязательное поле',
     },
     modals: {
       add: 'Добавить канал',

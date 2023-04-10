@@ -25,7 +25,7 @@ const Login = () => {
 
   const formik = useFormik({
     initialValues: { username: '', password: '' },
-    onSubmit: async (values, { setSubmitting, setErrors }) => {
+    onSubmit: async (values, { setErrors }) => {
       setAuthFailed(false);
 
       try {
@@ -36,24 +36,20 @@ const Login = () => {
         };
         navigate(from);
       } catch (error) {
+        console.log(error);
         if (error.isAxiosError && error.response.status === 401) {
-          setErrors({ password: 'login.authFailed' });
           setAuthFailed(true);
+          // setErrors({ password: 'login.authFailed' }); // FIXME: only onClick
           inputRef.current.select();
           rollbar.error(t('login.authFailed'), error, values);
           return;
         } else if (error.isAxiosError) {
           toast.error(t('errors.network'));
-          // rollbar.error(t('errors.network'), error, values); // FIXME: is it working?
-          // setErrors({ password: 'errors.network' });
-          // setAuthFailed(true);
           return;
         }
-        setErrors({ password: 'errors.unknown' }); // TODO: or toast?
+        toast.error(t('errors.unknown'));
         rollbar.error(t('errors.unknown'), error, values);
         throw error;
-      } finally {
-        setSubmitting(false);
       }
     },
   });
@@ -102,7 +98,7 @@ const Login = () => {
                   <Form.Control
                     type="password"
                     name="password"
-                    placeholder="Password"
+                    placeholder={t('login.password')}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.password}
@@ -110,11 +106,16 @@ const Login = () => {
                     isInvalid={authFailed}
                   />
                   <Form.Label>{t('login.password')}</Form.Label>
-                  {formik.touched.password && formik.errors.password && (
+                  {authFailed && (
+                    <div className="invalid-tooltip">
+                      {t('login.authFailed')}
+                    </div>
+                  )}
+                  {/* {authFailed && (
                     <div className="invalid-tooltip">
                       {t(formik.errors.password)}
                     </div>
-                  )}
+                  )} */}
                 </Form.Group>
 
                 <Button
