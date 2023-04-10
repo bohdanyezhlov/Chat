@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable no-param-reassign */
 import { createSlice, current } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
 import { removeChannel } from './channelsSlice';
@@ -9,10 +9,7 @@ const messagesReducer = createSlice({
   reducers: {
     setInitialState(state, { payload }) {
       const { messages } = payload;
-      return {
-        ...state,
-        messages,
-      };
+      state.messages = messages;
     },
     addMessage(state, { payload }) {
       console.log('addMessage', current(state), payload);
