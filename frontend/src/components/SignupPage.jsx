@@ -8,6 +8,7 @@ import { useAuth } from '../hooks';
 import { Form, Button } from 'react-bootstrap';
 import signupImage from '../assets/signupImage.jpg';
 import routes from '../routes';
+import { toast } from 'react-toastify';
 
 const Signup = () => {
   const auth = useAuth();
@@ -56,8 +57,9 @@ const Signup = () => {
           inputRef.current.select();
           return;
         } else if (error.isAxiosError) {
-          setErrors({ confirmPassword: 'errors.network' });
-          setSignupFailed(true);
+          toast.error(t('errors.network'));
+          // setErrors({ confirmPassword: 'errors.network' });
+          // setSignupFailed(true);
           return;
         }
         setErrors({ confirmPassword: 'errors.unknown' });

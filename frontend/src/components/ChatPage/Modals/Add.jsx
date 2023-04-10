@@ -7,6 +7,7 @@ import { useSocket } from '../../../hooks';
 import { Modal, FormGroup, FormControl, Form, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setCurrentChannel } from '../../../slices/channelsSlice';
+import { toast } from 'react-toastify';
 
 const Add = (props) => {
   const { t } = useTranslation();
@@ -43,6 +44,7 @@ const Add = (props) => {
           setTimeout(() => {
             // FIXME: timeout?
             dispatch(setCurrentChannel({ currentChannelId: data.id }));
+            toast.success(t('channels.created'));
           }, 30);
         });
         formik.resetForm();

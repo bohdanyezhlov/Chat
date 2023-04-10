@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { useSocket } from '../../../hooks';
 import { Modal, FormGroup, FormControl, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const Rename = (props) => {
   const { onHide } = props;
@@ -42,6 +43,7 @@ const Rename = (props) => {
         await socket.emit('renameChannel', newChannelName);
         formik.resetForm();
         onHide();
+        toast.success(t('channels.renamed'));
       } catch (error) {
         formik.setErrors({ name: error.message }); // FIXME: show error after submit
         console.log(error);

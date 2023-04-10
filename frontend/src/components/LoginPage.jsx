@@ -7,6 +7,7 @@ import axios from 'axios';
 import routes from '../routes';
 import { useAuth } from '../hooks';
 import loginImage from '../assets/loginImage.jpg';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const auth = useAuth();
@@ -39,11 +40,12 @@ const Login = () => {
           inputRef.current.select();
           return;
         } else if (error.isAxiosError) {
-          setErrors({ password: 'errors.network' });
-          setAuthFailed(true);
+          toast.error(t('errors.network'));
+          // setErrors({ password: 'errors.network' });
+          // setAuthFailed(true);
           return;
         }
-        setErrors({ password: 'errors.unknown' });
+        setErrors({ password: 'errors.unknown' }); // TODO: or toast?
         throw error;
       } finally {
         setSubmitting(false);

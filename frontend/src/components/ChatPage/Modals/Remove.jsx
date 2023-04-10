@@ -1,6 +1,7 @@
 import { useSocket } from '../../../hooks';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const Remove = (props) => {
   const { t } = useTranslation();
@@ -12,6 +13,7 @@ const Remove = (props) => {
     e.preventDefault(); // FIXME: ?
     socket.emit('removeChannel', { id });
     onHide();
+    toast.success(t('channels.removed'));
   };
 
   return (

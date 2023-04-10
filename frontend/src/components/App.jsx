@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import { Button, Navbar } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-
+import { ToastContainer } from 'react-toastify';
 import ChatPage from './ChatPage/ChatPage';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
@@ -101,6 +101,7 @@ const App = () => {
               <Route path={routes.loginPagePath()} element={<LoginPage />} />
               <Route path={routes.signupPagePath()} element={<SignupPage />} />
             </Routes>
+            <ToastContainer />
           </div>
         </Router>
       </AuthProvider>
