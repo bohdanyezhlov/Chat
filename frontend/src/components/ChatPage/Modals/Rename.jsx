@@ -42,7 +42,7 @@ const Rename = (props) => {
     validateOnChange: false,
     onSubmit: async ({ name }) => {
       const newChannelName = {
-        id, // FIXME: channelId is not working
+        id,
         name,
       };
       try {
@@ -53,7 +53,7 @@ const Rename = (props) => {
       } catch (error) {
         rollbar.error('channel renaming', error, name);
         formik.setErrors({ name: error.message });
-        formik.isSubmitting(false); // FIXME: finally? or formik does it
+        formik.isSubmitting(false);
         console.log(error);
       }
     },

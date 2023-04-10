@@ -33,7 +33,7 @@ const channelsReducer = createSlice({
     },
     renameChannel(state, { payload }) {
       console.log('renameChannel', current(state.channels), payload);
-      const { id, name } = payload.updatedChannel;
+      const { id, name } = payload;
       const channel = state.channels.find((c) => c.id === id);
       channel.name = name;
     },

@@ -12,15 +12,14 @@ import store from './slices';
 //   removeChannel,
 // } from './slices/channelsSlice';
 import { SocketContext } from './contexts';
-import App from './components/App';
+import App from './components/App/App';
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default async () => {
   // const dispatch = useDispatch();
   const i18n = i18next.createInstance();
   await i18n.use(initReactI18next).init({
     lng: 'ru',
-    resources, // eng?
+    resources,
   });
 
   const socket = io();

@@ -65,7 +65,8 @@ const EnterNewMessage = ({ channelId }) => {
 
   useEffect(() => {
     socket.on('renameChannel', (payload) => {
-      dispatch(renameChannel({ updatedChannel: payload }));
+      console.log(payload);
+      dispatch(renameChannel(payload));
     });
 
     return () => {

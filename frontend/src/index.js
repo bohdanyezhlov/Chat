@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Provider, ErrorBoundary } from '@rollbar/react'; // Provider imports 'rollbar'
+import { Provider, ErrorBoundary } from '@rollbar/react';
 import init from './init';
 import './index.css';
 

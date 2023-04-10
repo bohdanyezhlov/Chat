@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { PlusSquare } from 'react-bootstrap-icons';
-import { Dropdown, ButtonGroup } from 'react-bootstrap';
+import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import leoProfanity from 'leo-profanity';
 import getModal from './Modals';
 import { setCurrentChannel } from '../../slices/channelsSlice';
@@ -20,14 +20,19 @@ const renderModal = ({ modalInfo, hideModal, setItems }) => {
 
 const Channels = () => {
   const { t } = useTranslation();
+  const currentChannelRef = useRef();
   const dispatch = useDispatch();
   const { channels } = useSelector((state) => state.channels);
   const currentChannelId = useSelector(
     (state) => state.channels.currentChannelId,
   );
-  const [modalInfo, setModalInfo] = useState({ type: null, item: null });
-  const hideModal = () => setModalInfo({ type: null, item: null });
+  const [modalInfo, setModalInfo] = useState({ type: null });
+  const hideModal = () => setModalInfo({ type: null });
   const showModal = (type, item = null) => setModalInfo({ type, item });
+
+  useEffect(() => {
+    currentChannelRef.current.scrollIntoView({ behavior: 'auto' });
+  }, [channels]);
 
   const handleSetCurrentChannel = (id) => {
     dispatch(setCurrentChannel({ currentChannelId: id }));
@@ -37,37 +42,38 @@ const Channels = () => {
     <>
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
         <strong>{t('channels.channels')}</strong>
-        <button
+        <Button
           type="button"
-          className="p-0 text-primary btn btn-group-vertical"
+          variant="group-vertical"
+          className="p-0 text-primary"
           onClick={() => showModal('adding')}
         >
           <PlusSquare size={20} />
           <span className="visually-hidden">+</span>
-        </button>
+        </Button>
       </div>
       <ul className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
         {channels.map(({ id, name, removable }) => {
           const isActive = id === currentChannelId;
+          const variant = isActive ? 'secondary' : '';
 
           return (
-            <li key={id} className="nav-item w-100">
+            <li key={id} className="nav-item w-100" ref={isActive ? currentChannelRef : null}>
               {removable ? (
                 <Dropdown as={ButtonGroup} className="d-flex">
-                  <button
+                  <Button
                     onClick={() => handleSetCurrentChannel(id)}
                     type="button"
-                    className={`w-100 rounded-0 text-start text-truncate btn ${
-                      isActive ? ' btn-secondary' : ''
-                    }`}
+                    variant={variant}
+                    className="w-100 rounded-0 text-start text-truncate"
                   >
                     <span className="me-1">#</span>
                     {leoProfanity.clean(name)}
-                  </button>
+                  </Button>
                   <Dropdown.Toggle
                     split
                     className="flex-grow-0"
-                    variant={isActive ? ' btn-secondary' : null}
+                    variant={variant}
                   >
                     <span className="visually-hidden">
                       {t('channels.menu')}
@@ -83,17 +89,16 @@ const Channels = () => {
                   </Dropdown.Menu>
                 </Dropdown>
               ) : (
-                <button
+                <Button
                   onClick={() => handleSetCurrentChannel(id)}
                   type="button"
-                  className={`w-100 rounded-0 text-start text-truncate btn${
-                    isActive ? ' btn-secondary' : ''
-                  }`}
+                  variant={variant}
+                  className="w-100 rounded-0 text-start text-truncate"
                   // FIXME: nameLength ? 5
                 >
                   <span className="me-1">#</span>
                   {leoProfanity.clean(name)}
-                </button>
+                </Button>
               )}
             </li>
           );

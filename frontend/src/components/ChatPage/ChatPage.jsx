@@ -3,8 +3,7 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { Spinner } from 'react-bootstrap';
 import { useRollbar } from '@rollbar/react';
-import { setInitialState as setChannelsInitialState } from '../../slices/channelsSlice';
-import { setInitialState as setMessagesInitialState } from '../../slices/messagesSlice'; // TODO: extraReducer?
+import { setInitialState } from '../../slices/channelsSlice';
 import routes from '../../routes';
 import { useAuth } from '../../hooks';
 import Channels from './Channels';
@@ -24,8 +23,7 @@ const ChatPage = () => {
           headers: auth.getAuthHeader(),
         });
 
-        dispatch(setChannelsInitialState(response.data));
-        dispatch(setMessagesInitialState(response.data));
+        dispatch(setInitialState(response.data));
         setIsLoading(false);
       } catch (error) {
         rollbar.error('getting init data', error);

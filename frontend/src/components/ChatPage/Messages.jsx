@@ -6,7 +6,7 @@ import EnterNewMessage from './EnterNewMessage';
 
 const Messages = () => {
   const { t } = useTranslation();
-  const bottomMessageRef = useRef();
+  const latestMessageRef = useRef();
   const { channels, currentChannelId } = useSelector((state) => state.channels);
   const { messages } = useSelector((state) => state.messages);
 
@@ -19,7 +19,9 @@ const Messages = () => {
   );
 
   useEffect(() => {
-    bottomMessageRef.current.scrollIntoView({ behavior: 'auto' });
+    if (latestMessageRef.current) { // messages can be empty array
+      latestMessageRef.current.scrollIntoView({ behavior: 'auto' });
+    }
   }, [messagesForCurrentChannel]);
 
   return (
@@ -39,15 +41,15 @@ const Messages = () => {
         </span>
       </div>
       <div className="chat-messages overflow-auto px-5">
-        {messagesForCurrentChannel.map(({ username, body, id }) => (
-          <div className="text-break mb-2" key={id}>
+        {messagesForCurrentChannel.map(({ username, body, id }, index) => (
+          <div className="text-break mb-2" key={id} ref={messagesForCurrentChannel.length - 1 === index ? latestMessageRef : null}>
             <strong>{username}</strong>
             :
             {' '}
             {leoProfanity.clean(body)}
           </div>
         ))}
-        <div ref={bottomMessageRef} />
+        {/* <div ref={bottomMessageRef} /> */}
       </div>
       <div className="mt-auto px-5 py-3">
         <EnterNewMessage channelId={currentChannelId} />

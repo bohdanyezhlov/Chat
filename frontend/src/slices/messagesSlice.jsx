@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, current } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
-import { removeChannel } from './channelsSlice';
+import { removeChannel, setInitialState } from './channelsSlice';
 
 const messagesReducer = createSlice({
   name: 'messages',
@@ -22,10 +22,13 @@ const messagesReducer = createSlice({
       const { currentChannelId } = payload;
       console.log('extra removeChannel', current(state), payload);
       remove(state.messages, (m) => m.channelId === currentChannelId.id);
+    }).addCase(setInitialState, (state, { payload }) => {
+      const { messages } = payload;
+      state.messages = messages;
     });
   },
 });
 
-export const { setInitialState, addMessage } = messagesReducer.actions;
+export const { addMessage } = messagesReducer.actions;
 
 export default messagesReducer.reducer;

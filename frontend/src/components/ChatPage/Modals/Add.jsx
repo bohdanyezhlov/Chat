@@ -47,7 +47,7 @@ const Add = (props) => {
       try {
         await socket.volatile.emit('newChannel', newChannel, ({ data }) => {
           setTimeout(() => {
-            // FIXME: timeout? adding channel with slow 3G fails
+            // FIXME: remove timeout. adding channel with slow 3G fails
             dispatch(setCurrentChannel({ currentChannelId: data.id }));
             toast.success(t('channels.created'));
           }, 50);
@@ -57,7 +57,7 @@ const Add = (props) => {
       } catch (error) {
         rollbar.error('channel adding', error, name);
         formik.setErrors({ name: error.message });
-        formik.isSubmitting(false); // FIXME: finally? or formik does it
+        formik.isSubmitting(false);
         console.log(error);
       }
     },
