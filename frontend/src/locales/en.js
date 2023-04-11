@@ -41,6 +41,8 @@ export default {
       send: 'Send',
       messageCount: 'message',
       messageCount_plural: 'messages',
+      newMessage: 'New message',
+      enterNewMessage: 'Enter new message...',
     },
     signup: {
       required: 'Required',
@@ -53,7 +55,6 @@ export default {
       alreadyExists: 'Username already taken',
       submit: 'Submit',
       header: 'Signup',
-      enterNewMessage: 'Enter new message...',
     },
     notFound: {
       header: 'Page not found',
