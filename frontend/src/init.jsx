@@ -1,56 +1,71 @@
+/* eslint-disable no-unused-vars */
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import i18next from 'i18next';
 import io from 'socket.io-client';
+import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import leoProfanity from 'leo-profanity';
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
+
+import reducer from './slices';
 import resources from './locales';
-import store from './slices';
-// import { addMessage } from './slices/messagesSlice';
-// import {
-//   addChannel,
-//   renameChannel,
-//   removeChannel,
-// } from './slices/channelsSlice';
 import { SocketContext } from './contexts';
+import { addMessage } from './slices/messagesSlice';
+import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
 import App from './components/App/App';
 
 export default async () => {
-  // const dispatch = useDispatch();
+  const isProduction = process.env.NODE_ENV === 'production';
+
   const i18n = i18next.createInstance();
+
   await i18n.use(initReactI18next).init({
-    lng: 'ru',
+    fallbackLng: 'ru',
     resources,
   });
-
-  const socket = io();
 
   leoProfanity.add(leoProfanity.getDictionary('en'));
   leoProfanity.add(leoProfanity.getDictionary('fr'));
   leoProfanity.add(leoProfanity.getDictionary('ru'));
 
-  // socket.on('newMessage', (payload) => {
-  //   dispatch(addMessage({ message: payload }));
-  // });
+  const store = configureStore({
+    reducer,
+  });
 
-  // socket.on('newChannel', (payload) => {
-  //   dispatch(addChannel({ name: payload }));
-  // });
+  const socket = io();
 
-  // socket.on('removeChannel', (payload) => {
-  //   dispatch(removeChannel({ currentChannelId: payload }));
-  // });
+  socket.on('newMessage', (payload) => {
+    store.dispatch(addMessage({ message: payload }));
+  });
 
-  // socket.on('renameChannel', (payload) => {
-  //   dispatch(renameChannel({ updatedChannel: payload }));
-  // });
+  socket.on('newChannel', (payload) => {
+    store.dispatch(addChannel({ name: payload }));
+  });
+
+  socket.on('removeChannel', (payload) => {
+    store.dispatch(removeChannel({ currentChannelId: payload }));
+  });
+
+  socket.on('renameChannel', (payload) => {
+    store.dispatch(renameChannel({ updatedChannel: payload }));
+  });
+
+  const rollbarConfig = {
+    enabled: isProduction,
+    accessToken: process.env.ROLLBAR_TOKEN,
+  };
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <Provider store={store}>
-        <SocketContext.Provider value={socket}>
-          <App />
-        </SocketContext.Provider>
-      </Provider>
-    </I18nextProvider>
+    <RollbarProvider config={rollbarConfig}>
+      <ErrorBoundary>
+        <I18nextProvider i18n={i18n}>
+          <Provider store={store}>
+            <SocketContext.Provider value={socket}>
+              <App />
+            </SocketContext.Provider>
+          </Provider>
+        </I18nextProvider>
+      </ErrorBoundary>
+    </RollbarProvider>
   );
 };
