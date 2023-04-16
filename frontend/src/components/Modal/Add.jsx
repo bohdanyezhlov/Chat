@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -8,17 +9,17 @@ import {
 } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
-import { useSocket } from '../../../hooks';
-import { setCurrentChannel } from '../../../slices/channelsSlice';
+
+import { useSocket } from '../../hooks';
+import { setCurrentChannel } from '../../slices/channelsSlice';
 
 const Add = (props) => {
   const { t } = useTranslation();
-  const { onHide } = props;
-  const dispatch = useDispatch();
-  const socket = useSocket();
-  const { channels } = useSelector((state) => state.channels);
-  const channelsNames = channels.map(({ name }) => name);
+  const { handleClose } = props;
+  const { addChannel } = useSocket();
+  const channelsNames = useSelector((state) => state.channels.channels.map(({ name }) => name));
   const rollbar = useRollbar();
+  const dispatch = useDispatch();
 
   const inputRef = useRef();
   useEffect(() => {
@@ -45,15 +46,13 @@ const Add = (props) => {
       };
 
       try {
-        await socket.volatile.emit('newChannel', newChannel, ({ data }) => {
-          setTimeout(() => {
-            // FIXME: remove timeout. adding channel with slow 3G fails
-            dispatch(setCurrentChannel({ currentChannelId: data.id }));
-            toast.success(t('channels.created'));
-          }, 50);
-        });
+        // eslint-disable-next-line no-unused-vars
+        const { data } = await addChannel(newChannel);
+        // console.log('Add:', data.id);
+        // dispatch(setCurrentChannel({ currentChannelId: data.id }));
+        toast.success(t('channels.created'));
         formik.resetForm();
-        onHide();
+        handleClose();
       } catch (error) {
         rollbar.error('channel adding', error, name);
         formik.setErrors({ name: error.message });
@@ -64,8 +63,8 @@ const Add = (props) => {
   });
 
   return (
-    <Modal show>
-      <Modal.Header closeButton onHide={onHide}>
+    <>
+      <Modal.Header closeButton onHide={handleClose}>
         <Modal.Title>{t('modals.add')}</Modal.Title>
       </Modal.Header>
 
@@ -90,7 +89,7 @@ const Add = (props) => {
             <Button
               type="button"
               className="me-2 btn-secondary"
-              onClick={onHide}
+              onClick={handleClose}
             >
               {t('modals.cancel')}
             </Button>
@@ -100,7 +99,7 @@ const Add = (props) => {
           </div>
         </form>
       </Modal.Body>
-    </Modal>
+    </>
   );
 };
 

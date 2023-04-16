@@ -24,12 +24,13 @@ const channelsReducer = createSlice({
     removeChannel(state, { payload }) {
       const { currentChannelId } = payload;
       remove(state.channels, (c) => c.id === currentChannelId.id);
+
       if (state.currentChannelId === currentChannelId.id) {
         state.currentChannelId = defaultCurrentChannelId;
       }
     },
     renameChannel(state, { payload }) {
-      const { id, name } = payload;
+      const { id, name } = payload.updatedChannel;
       const channel = state.channels.find((c) => c.id === id);
       channel.name = name;
     },

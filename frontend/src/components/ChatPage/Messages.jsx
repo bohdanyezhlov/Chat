@@ -2,27 +2,39 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import leoProfanity from 'leo-profanity';
+
 import EnterNewMessage from './EnterNewMessage';
+
+const Message = ({
+  index, body, username, latestMessageRef, messagesForCurrentChannel,
+}) => (
+  <div className="text-break mb-2" ref={messagesForCurrentChannel.length - 1 === index ? latestMessageRef : null}>
+    <strong>{username}</strong>
+    :
+    {' '}
+    {body}
+  </div>
+);
 
 const Messages = () => {
   const { t } = useTranslation();
   const latestMessageRef = useRef();
   const { channels, currentChannelId } = useSelector((state) => state.channels);
-  const { messages } = useSelector((state) => state.messages);
-
-  const messagesForCurrentChannel = messages.filter(
-    (m) => m.channelId === currentChannelId,
-  );
-
+  const messagesForCurrentChannel = useSelector((state) => state.messages
+    .messages.filter((m) => m.channelId === currentChannelId)); // FIXME: ?
   const [{ name: channelName }] = channels.filter(
     (c) => c.id === currentChannelId,
   );
+  const filteredMessages = messagesForCurrentChannel.map((m) => ({
+    ...m,
+    body: leoProfanity.clean(m.body),
+  }));
 
   useEffect(() => {
     if (latestMessageRef.current) { // messages can be empty array
       latestMessageRef.current.scrollIntoView({ behavior: 'auto' });
     }
-  }, [messagesForCurrentChannel]);
+  }, [messagesForCurrentChannel.length]);
 
   return (
     <>
@@ -35,21 +47,22 @@ const Messages = () => {
           </strong>
         </p>
         <span className="text-muted">
-          {`${messagesForCurrentChannel.length} ${t('chat.messageCount', {
-            count: messagesForCurrentChannel.length,
+          {`${filteredMessages.length} ${t('chat.messageCount', {
+            count: filteredMessages.length,
           })}`}
         </span>
       </div>
       <div className="chat-messages overflow-auto px-5">
-        {messagesForCurrentChannel.map(({ username, body, id }, index) => (
-          <div className="text-break mb-2" key={id} ref={messagesForCurrentChannel.length - 1 === index ? latestMessageRef : null}>
-            <strong>{username}</strong>
-            :
-            {' '}
-            {leoProfanity.clean(body)}
-          </div>
+        {filteredMessages.map(({ username, body, id }, index) => (
+          <Message
+            username={username}
+            body={body}
+            key={id}
+            index={index}
+            latestMessageRef={latestMessageRef}
+            messagesForCurrentChannel={filteredMessages}
+          />
         ))}
-        {/* <div ref={bottomMessageRef} /> */}
       </div>
       <div className="mt-auto px-5 py-3">
         <EnterNewMessage channelId={currentChannelId} />

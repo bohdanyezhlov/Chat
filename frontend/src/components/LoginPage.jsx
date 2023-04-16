@@ -6,6 +6,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
+
 import routes from '../routes';
 import { useAuth } from '../hooks';
 import loginImage from '../assets/loginImage.jpg';
@@ -37,19 +38,19 @@ const Login = () => {
         navigate(from);
       } catch (error) {
         console.log(error);
-        if (error.isAxiosError && error.response.status === 401) {
-          setAuthFailed(true);
-          // setErrors({ password: 'login.authFailed' }); // FIXME: only onClick
-          inputRef.current.select();
-          rollbar.error(t('login.authFailed'), error, values);
-          return;
-        } if (error.isAxiosError) {
-          toast.error(t('errors.network'));
+        rollbar.error(t('errors.unknown'), error, values);
+
+        if (!error.isAxiosError) {
+          toast.error(t('errors.unknown'));
           return;
         }
-        toast.error(t('errors.unknown'));
-        rollbar.error(t('errors.unknown'), error, values);
-        throw error;
+
+        if (error.response.status === 401) {
+          setAuthFailed(true); // FIXME: ?
+          inputRef.current.select();
+        } else {
+          toast.error(t('errors.network'));
+        }
       }
     },
   });

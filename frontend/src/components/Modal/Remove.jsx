@@ -2,19 +2,21 @@ import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
-import { useSocket } from '../../../hooks';
+import { useSelector } from 'react-redux';
+
+import { useSocket } from '../../hooks';
 
 const Remove = (props) => {
   const { t } = useTranslation();
-  const socket = useSocket();
-  const { onHide } = props;
-  const { modalInfo: { item: id } } = props;
+  const { removeChannel } = useSocket();
+  const { handleClose } = props;
+  const id = useSelector((state) => state.modal.info);
   const rollbar = useRollbar();
 
   const handleSubmit = async () => {
     try {
-      await socket.emit('removeChannel', { id });
-      onHide();
+      await removeChannel({ id });
+      handleClose();
       toast.success(t('channels.removed'));
     } catch (error) {
       rollbar.error('channel renaming', error, id);
@@ -23,15 +25,15 @@ const Remove = (props) => {
   };
 
   return (
-    <Modal show>
-      <Modal.Header closeButton onHide={onHide}>
+    <>
+      <Modal.Header closeButton onHide={handleClose}>
         <Modal.Title>{t('modals.remove')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <p className="lead">{t('modals.confirmation')}</p>
         <div className="d-flex justify-content-end">
-          <Button className="me-2 btn-secondary" onClick={onHide}>
+          <Button className="me-2 btn-secondary" onClick={handleClose}>
             {t('modals.cancel')}
           </Button>
           <Button onClick={handleSubmit} variant="danger">
@@ -39,7 +41,7 @@ const Remove = (props) => {
           </Button>
         </div>
       </Modal.Body>
-    </Modal>
+    </>
   );
 };
 

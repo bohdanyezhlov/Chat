@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
+
 import { useAuth } from '../hooks';
 import signupImage from '../assets/signupImage.jpg';
 import routes from '../routes';
@@ -50,20 +51,21 @@ const Signup = () => {
         navigate(routes.chatPagePath());
       } catch (error) {
         console.log(error);
-        if (error.isAxiosError && error.response.status === 409) {
+        rollbar.error(t('errors.unknown'), error, values);
+
+        if (!error.isAxiosError) {
+          toast.error(t('errors.unknown'));
+          return;
+        }
+
+        if (error.response.status === 409) {
           setErrors({ confirmPassword: 'signup.alreadyExists' });
           setSignupFailed(true);
           inputRef.current.select();
-          rollbar.error(t('signup.alreadyExists'), error, values);
-          return;
-        } if (error.isAxiosError) {
+        } else {
           toast.error(t('errors.network'));
-          // setErrors({ confirmPassword: 'errors.network' });
-          setSignupFailed(true); // FIXME: remove it?
-          return;
+          // setSignupFailed(true); FIXME: ?
         }
-        // setErrors({ confirmPassword: 'errors.unknown' }); // FIXME: ?
-        throw error;
       }
     },
   });

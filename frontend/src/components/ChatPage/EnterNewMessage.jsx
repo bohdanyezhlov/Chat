@@ -4,15 +4,9 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
 import { useRollbar } from '@rollbar/react';
+
 import { useAuth, useSocket } from '../../hooks';
-import { addMessage } from '../../slices/messagesSlice';
-import {
-  addChannel,
-  removeChannel,
-  renameChannel,
-} from '../../slices/channelsSlice';
 
 const validationSchema = Yup.object().shape({
   body: Yup.string().trim().required('required'),
@@ -22,57 +16,14 @@ const EnterNewMessage = ({ channelId }) => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
   const inputRef = useRef();
-  const dispatch = useDispatch();
   const {
     user: { username },
   } = useAuth();
-  const socket = useSocket();
+  const { sendMessage } = useSocket();
 
   useEffect(() => {
     inputRef.current.focus();
   }, [channelId]);
-
-  // TODO: move to init.js
-  useEffect(() => {
-    socket.on('newMessage', (payload) => {
-      dispatch(addMessage({ message: payload }));
-    });
-
-    return () => {
-      socket.off('newMessage');
-    };
-  }, [socket, dispatch]);
-
-  useEffect(() => {
-    socket.on('newChannel', (payload) => {
-      dispatch(addChannel({ name: payload }));
-    });
-
-    return () => {
-      socket.off('newChannel');
-    };
-  }, [socket, dispatch]);
-
-  useEffect(() => {
-    socket.on('removeChannel', (payload) => {
-      dispatch(removeChannel({ currentChannelId: payload }));
-    });
-
-    return () => {
-      socket.off('removeChannel');
-    };
-  }, [socket, dispatch]);
-
-  useEffect(() => {
-    socket.on('renameChannel', (payload) => {
-      console.log(payload);
-      dispatch(renameChannel(payload));
-    });
-
-    return () => {
-      socket.off('renameChannel');
-    };
-  }, [socket, dispatch]);
 
   const formik = useFormik({
     initialValues: { body: '' },
@@ -85,7 +36,8 @@ const EnterNewMessage = ({ channelId }) => {
       };
 
       try {
-        await socket.volatile.emit('newMessage', message);
+        const response = await sendMessage(message);
+        console.log('Message', response);
         formik.resetForm();
       } catch (error) {
         rollbar.error('sending new message', error, body);
@@ -109,13 +61,13 @@ const EnterNewMessage = ({ channelId }) => {
           value={formik.values.body}
           ref={inputRef}
           aria-label={t('chat.newMessage')}
+          autoComplete="off"
         />
         <Button
           type="submit"
           variant="group-vertical"
-          disabled={formik.touched.body && formik.errors.body}
+          disabled={!formik.isValid || !formik.dirty}
         >
-          {/* FIXME: remove border (disabled) */}
           <ArrowRightSquare size={20} />
           <span className="visually-hidden">{t('chat.send')}</span>
         </Button>

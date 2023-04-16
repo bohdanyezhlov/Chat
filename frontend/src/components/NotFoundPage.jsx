@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+
 import routes from '../routes';
 import notFoundImage from '../assets/notFoundImage.svg';
 

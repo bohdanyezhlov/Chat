@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import i18next from 'i18next';
 import io from 'socket.io-client';
@@ -34,6 +33,28 @@ export default async () => {
 
   const socket = io();
 
+  function asyncEmit(eventName, data) {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Request timed out'));
+      }, 5000);
+
+      socket.volatile.emit(eventName, data, (response) => {
+        clearTimeout(timeout);
+        console.log(response);
+        resolve(response);
+      });
+    });
+  }
+
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const socketApi = {
+    sendMessage: (data) => asyncEmit('newMessage', data),
+    addChannel: (data) => asyncEmit('newChannel', data),
+    removeChannel: (data) => asyncEmit('removeChannel', data),
+    renameChannel: (data) => asyncEmit('renameChannel', data),
+  };
+
   socket.on('newMessage', (payload) => {
     store.dispatch(addMessage({ message: payload }));
   });
@@ -60,7 +81,7 @@ export default async () => {
       <ErrorBoundary>
         <I18nextProvider i18n={i18n}>
           <Provider store={store}>
-            <SocketContext.Provider value={socket}>
+            <SocketContext.Provider value={socketApi}>
               <App />
             </SocketContext.Provider>
           </Provider>

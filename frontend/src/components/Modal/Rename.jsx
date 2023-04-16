@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -8,13 +8,14 @@ import {
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
-import { useSocket } from '../../../hooks';
+
+import { useSocket } from '../../hooks';
 
 const Rename = (props) => {
-  const { onHide } = props;
-  const { modalInfo: { item: id } } = props;
+  const { handleClose } = props;
+  const id = useSelector((state) => state.modal.info);
   const { t } = useTranslation();
-  const socket = useSocket();
+  const { renameChannel } = useSocket();
   const { channels } = useSelector((state) => state.channels);
   const channelsNames = channels.map(({ name }) => name);
   const [currentChannel] = channels.filter((c) => c.id === id);
@@ -46,9 +47,9 @@ const Rename = (props) => {
         name,
       };
       try {
-        await socket.emit('renameChannel', newChannelName);
+        await renameChannel(newChannelName);
         formik.resetForm();
-        onHide();
+        handleClose();
         toast.success(t('channels.renamed'));
       } catch (error) {
         rollbar.error('channel renaming', error, name);
@@ -60,8 +61,8 @@ const Rename = (props) => {
   });
 
   return (
-    <Modal show>
-      <Modal.Header closeButton onHide={onHide}>
+    <>
+      <Modal.Header closeButton onHide={handleClose}>
         <Modal.Title>{t('modals.rename')}</Modal.Title>
       </Modal.Header>
 
@@ -89,7 +90,7 @@ const Rename = (props) => {
             <Button
               type="button"
               className="me-2 btn-secondary"
-              onClick={onHide}
+              onClick={handleClose}
             >
               {t('modals.cancel')}
             </Button>
@@ -99,7 +100,7 @@ const Rename = (props) => {
           </div>
         </form>
       </Modal.Body>
-    </Modal>
+    </>
   );
 };
 

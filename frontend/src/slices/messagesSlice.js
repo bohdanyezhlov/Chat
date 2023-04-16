@@ -7,23 +7,21 @@ const messagesReducer = createSlice({
   name: 'messages',
   initialState: { messages: [] },
   reducers: {
-    setInitialState(state, { payload }) {
-      const { messages } = payload;
-      state.messages = messages;
-    },
     addMessage(state, { payload }) {
       const { message } = payload;
       state.messages.push(message);
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(removeChannel, (state, { payload }) => {
-      const { currentChannelId } = payload;
-      remove(state.messages, (m) => m.channelId === currentChannelId.id);
-    }).addCase(setInitialState, (state, { payload }) => {
-      const { messages } = payload;
-      state.messages = messages;
-    });
+    builder
+      .addCase(removeChannel, (state, { payload }) => {
+        const { currentChannelId } = payload;
+        remove(state.messages, (m) => m.channelId === currentChannelId.id);
+      })
+      .addCase(setInitialState, (state, { payload }) => {
+        const { messages } = payload;
+        state.messages = messages;
+      });
   },
 });
 
