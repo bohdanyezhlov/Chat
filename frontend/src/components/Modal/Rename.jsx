@@ -11,15 +11,25 @@ import { useRollbar } from '@rollbar/react';
 
 import { useSocket } from '../../hooks';
 
+const getChannelsNames = (state) => {
+  const { channels } = state.channels;
+  return channels.map(({ name }) => name);
+};
+
+const getCurrentChannelName = (state) => {
+  const { channels } = state.channels;
+  const { info } = state.modal;
+  const [currentChannel] = channels.filter((c) => c.id === info);
+  return currentChannel.name;
+};
+
 const Rename = (props) => {
   const { handleClose } = props;
   const id = useSelector((state) => state.modal.info);
+  const channelsNames = useSelector(getChannelsNames);
+  const currentChannelName = useSelector(getCurrentChannelName);
   const { t } = useTranslation();
   const { renameChannel } = useSocket();
-  const { channels } = useSelector((state) => state.channels);
-  const channelsNames = channels.map(({ name }) => name);
-  const [currentChannel] = channels.filter((c) => c.id === id);
-  const currentChannelName = currentChannel.name;
   const rollbar = useRollbar();
 
   const inputRef = useRef();
@@ -46,6 +56,7 @@ const Rename = (props) => {
         id,
         name,
       };
+
       try {
         await renameChannel(newChannelName);
         formik.resetForm();
@@ -53,8 +64,7 @@ const Rename = (props) => {
         toast.success(t('channels.renamed'));
       } catch (error) {
         rollbar.error('channel renaming', error, name);
-        formik.setErrors({ name: error.message });
-        formik.isSubmitting(false);
+        formik.setSubmitting(false);
         console.log(error);
       }
     },
@@ -72,6 +82,7 @@ const Rename = (props) => {
             <FormControl
               id="name"
               className="mb-2"
+              disabled={formik.isSubmitting}
               ref={inputRef}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

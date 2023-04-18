@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
@@ -46,16 +45,14 @@ const Add = (props) => {
       };
 
       try {
-        // eslint-disable-next-line no-unused-vars
-        const { data } = await addChannel(newChannel);
-        // console.log('Add:', data.id);
-        // dispatch(setCurrentChannel({ currentChannelId: data.id }));
+        const { status, data } = await addChannel(newChannel);
+        console.log('Add:', data.id, status);
+        dispatch(setCurrentChannel({ currentChannelId: data.id }));
         toast.success(t('channels.created'));
         formik.resetForm();
         handleClose();
       } catch (error) {
         rollbar.error('channel adding', error, name);
-        formik.setErrors({ name: error.message });
         formik.isSubmitting(false);
         console.log(error);
       }
@@ -73,6 +70,7 @@ const Add = (props) => {
           <FormGroup>
             <FormControl
               className="mb-2"
+              disabled={formik.isSubmitting}
               ref={inputRef}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

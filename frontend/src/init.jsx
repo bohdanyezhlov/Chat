@@ -41,7 +41,6 @@ export default async () => {
 
       socket.volatile.emit(eventName, data, (response) => {
         clearTimeout(timeout);
-        console.log(response);
         resolve(response);
       });
     });
@@ -60,6 +59,7 @@ export default async () => {
   });
 
   socket.on('newChannel', (payload) => {
+    console.log('addChannel', payload);
     store.dispatch(addChannel({ name: payload }));
   });
 

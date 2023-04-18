@@ -64,7 +64,7 @@ const Signup = () => {
           inputRef.current.select();
         } else {
           toast.error(t('errors.network'));
-          // setSignupFailed(true); FIXME: ?
+          setSignupFailed(true);
         }
       }
     },

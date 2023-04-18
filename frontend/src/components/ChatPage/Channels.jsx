@@ -72,10 +72,7 @@ const Channels = () => {
   const { t } = useTranslation();
   const currentChannelRef = useRef();
   const dispatch = useDispatch();
-  const { channels } = useSelector((state) => state.channels);
-  const currentChannelId = useSelector(
-    (state) => state.channels.currentChannelId,
-  );
+  const { channels, currentChannelId } = useSelector((state) => state.channels);
 
   useEffect(() => {
     currentChannelRef.current.scrollIntoView({ behavior: 'auto' });

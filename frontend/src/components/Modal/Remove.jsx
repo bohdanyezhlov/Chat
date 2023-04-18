@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -9,16 +10,20 @@ import { useSocket } from '../../hooks';
 const Remove = (props) => {
   const { t } = useTranslation();
   const { removeChannel } = useSocket();
+  const [loading, setLoading] = useState(false);
   const { handleClose } = props;
   const id = useSelector((state) => state.modal.info);
   const rollbar = useRollbar();
 
   const handleSubmit = async () => {
+    setLoading(true);
+
     try {
       await removeChannel({ id });
       handleClose();
       toast.success(t('channels.removed'));
     } catch (error) {
+      setLoading(false);
       rollbar.error('channel renaming', error, id);
       console.log(error);
     }
@@ -36,7 +41,7 @@ const Remove = (props) => {
           <Button className="me-2 btn-secondary" onClick={handleClose}>
             {t('modals.cancel')}
           </Button>
-          <Button onClick={handleSubmit} variant="danger">
+          <Button onClick={handleSubmit} disabled={loading} variant="danger">
             {t('modals.confirm')}
           </Button>
         </div>

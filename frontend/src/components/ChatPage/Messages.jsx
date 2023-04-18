@@ -16,16 +16,25 @@ const Message = ({
   </div>
 );
 
+const getCurrentChannel = (state) => {
+  const { channels, currentChannelId } = state.channels;
+  const currentChannel = channels.find((c) => c.id === currentChannelId);
+  return currentChannel;
+};
+
+const getMessagesForCurrentChannel = (state) => {
+  const { currentChannelId } = state.channels;
+  const { messages } = state.messages;
+  const messagesForCurrentChannel = messages.filter((m) => m.channelId === currentChannelId);
+  return messagesForCurrentChannel;
+};
+
 const Messages = () => {
   const { t } = useTranslation();
   const latestMessageRef = useRef();
-  const { channels, currentChannelId } = useSelector((state) => state.channels);
-  const messagesForCurrentChannel = useSelector((state) => state.messages
-    .messages.filter((m) => m.channelId === currentChannelId)); // FIXME: ?
-  const [{ name: channelName }] = channels.filter(
-    (c) => c.id === currentChannelId,
-  );
-  const filteredMessages = messagesForCurrentChannel.map((m) => ({
+  const channel = useSelector(getCurrentChannel);
+  const messages = useSelector(getMessagesForCurrentChannel);
+  const filteredMessages = messages.map((m) => ({
     ...m,
     body: leoProfanity.clean(m.body),
   }));
@@ -34,7 +43,7 @@ const Messages = () => {
     if (latestMessageRef.current) { // messages can be empty array
       latestMessageRef.current.scrollIntoView({ behavior: 'auto' });
     }
-  }, [messagesForCurrentChannel.length]);
+  }, [messages.length]);
 
   return (
     <>
@@ -43,7 +52,7 @@ const Messages = () => {
           <strong>
             #
             {' '}
-            {leoProfanity.clean(channelName)}
+            {leoProfanity.clean(channel.name)}
           </strong>
         </p>
         <span className="text-muted">
@@ -65,7 +74,7 @@ const Messages = () => {
         ))}
       </div>
       <div className="mt-auto px-5 py-3">
-        <EnterNewMessage channelId={currentChannelId} />
+        <EnterNewMessage channelId={channel.id} />
       </div>
     </>
   );

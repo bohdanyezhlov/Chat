@@ -36,14 +36,12 @@ const EnterNewMessage = ({ channelId }) => {
       };
 
       try {
-        const response = await sendMessage(message);
-        console.log('Message', response);
+        await sendMessage(message);
         formik.resetForm();
       } catch (error) {
+        formik.setSubmitting(false);
         rollbar.error('sending new message', error, body);
         console.log(error);
-      } finally {
-        formik.setSubmitting(false);
       }
     },
   });
