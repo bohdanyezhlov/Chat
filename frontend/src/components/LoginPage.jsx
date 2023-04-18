@@ -46,7 +46,7 @@ const Login = () => {
         }
 
         if (error.response.status === 401) {
-          setAuthFailed(true); // FIXME: ?
+          setAuthFailed(true);
           inputRef.current.select();
         } else {
           toast.error(t('errors.network'));
@@ -81,6 +81,7 @@ const Login = () => {
                   <Form.Control
                     type="text"
                     name="username"
+                    autoComplete="username"
                     placeholder={t('login.username')}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -99,6 +100,7 @@ const Login = () => {
                   <Form.Control
                     type="password"
                     name="password"
+                    autoComplete="current-password"
                     placeholder={t('login.password')}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -112,11 +114,6 @@ const Login = () => {
                       {t('login.authFailed')}
                     </div>
                   )}
-                  {/* {authFailed && (
-                    <div className="invalid-tooltip">
-                      {t(formik.errors.password)}
-                    </div>
-                  )} */}
                 </Form.Group>
 
                 <Button

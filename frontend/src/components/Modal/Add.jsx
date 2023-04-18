@@ -45,8 +45,7 @@ const Add = (props) => {
       };
 
       try {
-        const { status, data } = await addChannel(newChannel);
-        console.log('Add:', data.id, status);
+        const { data } = await addChannel(newChannel);
         dispatch(setCurrentChannel({ currentChannelId: data.id }));
         toast.success(t('channels.created'));
         formik.resetForm();

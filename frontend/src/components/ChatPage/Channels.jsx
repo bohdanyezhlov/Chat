@@ -76,7 +76,7 @@ const Channels = () => {
 
   useEffect(() => {
     currentChannelRef.current.scrollIntoView({ behavior: 'auto' });
-  }, [channels]);
+  }, [channels.length]);
 
   const handleSetCurrentChannel = (id) => () => {
     dispatch(setCurrentChannel({ currentChannelId: id }));

@@ -52,7 +52,7 @@ const Messages = () => {
           <strong>
             #
             {' '}
-            {leoProfanity.clean(channel.name)}
+            {leoProfanity.clean(channel?.name)}
           </strong>
         </p>
         <span className="text-muted">
@@ -74,7 +74,7 @@ const Messages = () => {
         ))}
       </div>
       <div className="mt-auto px-5 py-3">
-        <EnterNewMessage channelId={channel.id} />
+        <EnterNewMessage channelId={channel?.id} />
       </div>
     </>
   );

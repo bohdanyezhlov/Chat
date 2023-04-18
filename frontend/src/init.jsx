@@ -11,7 +11,7 @@ import resources from './locales';
 import { SocketContext } from './contexts';
 import { addMessage } from './slices/messagesSlice';
 import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
-import App from './components/App/App';
+import App from './components/App';
 
 export default async () => {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -33,18 +33,16 @@ export default async () => {
 
   const socket = io();
 
-  function asyncEmit(eventName, data) {
-    return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject(new Error('Request timed out'));
-      }, 5000);
+  const asyncEmit = (eventName, data) => new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error('Request timed out'));
+    }, 5000);
 
-      socket.volatile.emit(eventName, data, (response) => {
-        clearTimeout(timeout);
-        resolve(response);
-      });
+    socket.volatile.emit(eventName, data, (response) => {
+      clearTimeout(timeout);
+      resolve(response);
     });
-  }
+  });
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   const socketApi = {
@@ -59,8 +57,7 @@ export default async () => {
   });
 
   socket.on('newChannel', (payload) => {
-    console.log('addChannel', payload);
-    store.dispatch(addChannel({ name: payload }));
+    store.dispatch(addChannel({ channel: payload }));
   });
 
   socket.on('removeChannel', (payload) => {

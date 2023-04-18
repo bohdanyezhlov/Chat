@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
 
 const defaultCurrentChannelId = 1;
@@ -14,14 +14,12 @@ const channelsReducer = createSlice({
       state.currentChannelId = currentChannelId;
     },
     setCurrentChannel(state, { payload }) {
-      console.log(current(state), payload, 'state');
       const { currentChannelId } = payload;
       state.currentChannelId = currentChannelId;
     },
     addChannel(state, { payload }) {
-      console.log(current(state), payload, 'state');
-      const { name } = payload;
-      state.channels.push(name);
+      const { channel } = payload;
+      state.channels.push(channel);
     },
     removeChannel(state, { payload }) {
       const { currentChannelId } = payload;

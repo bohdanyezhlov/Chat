@@ -16,7 +16,7 @@ const Navbar = () => {
   const { t } = useTranslation();
 
   return (
-    <BootstrapNavbar className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
+    <BootstrapNavbar bg="white" expand="lg" className="shadow-sm">
       <div className="container">
         <BootstrapNavbar.Brand as={Link} to={routes.chatPagePath()}>
           {t('hexletChat')}

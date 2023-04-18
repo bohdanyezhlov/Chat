@@ -64,7 +64,6 @@ const Signup = () => {
           inputRef.current.select();
         } else {
           toast.error(t('errors.network'));
-          setSignupFailed(true);
         }
       }
     },
@@ -96,6 +95,7 @@ const Signup = () => {
                   <Form.Control
                     type="text"
                     name="username"
+                    autoComplete="username"
                     placeholder={t('signup.usernameConstraints')}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -122,6 +122,7 @@ const Signup = () => {
                   <Form.Control
                     type="password"
                     name="password"
+                    autoComplete="current-password"
                     placeholder={t('signup.passMin')}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -147,6 +148,7 @@ const Signup = () => {
                   <Form.Control
                     type="password"
                     name="confirmPassword"
+                    autoComplete="current-password"
                     placeholder={t('signup.mustMatch')}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
