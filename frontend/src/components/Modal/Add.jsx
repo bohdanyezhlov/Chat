@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
+import leoProfanity from 'leo-profanity';
 
 import validationSchema from './validationSchema';
 import { useSocket } from '../../hooks';
@@ -32,8 +33,9 @@ const Add = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async ({ name }) => {
+      const filteredName = leoProfanity.clean(name);
       const newChannel = {
-        name,
+        name: filteredName,
       };
 
       try {

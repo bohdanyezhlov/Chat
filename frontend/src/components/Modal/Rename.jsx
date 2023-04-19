@@ -7,6 +7,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
+import leoProfanity from 'leo-profanity';
 
 import validationSchema from './validationSchema';
 import { useSocket } from '../../hooks';
@@ -32,9 +33,10 @@ const Rename = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async ({ name }) => {
+      const filteredName = leoProfanity.clean(name);
       const newChannelName = {
         id,
-        name,
+        name: filteredName,
       };
 
       try {

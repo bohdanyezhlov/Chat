@@ -5,7 +5,6 @@ import { PlusSquare } from 'react-bootstrap-icons';
 import {
   Dropdown, ButtonGroup, Button, OverlayTrigger, Tooltip,
 } from 'react-bootstrap';
-import leoProfanity from 'leo-profanity';
 
 import { getLastChannelId } from '../../selectors';
 import { setCurrentChannel, defaultCurrentChannelId } from '../../slices/channelsSlice';
@@ -33,7 +32,7 @@ const Channel = (props) => {
             className="w-100 rounded-0 text-start text-truncate"
           >
             <span className="me-1">#</span>
-            {leoProfanity.clean(channel.name)}
+            {channel.name}
           </Button>
           <Dropdown.Toggle
             split
@@ -61,7 +60,7 @@ const Channel = (props) => {
           className="w-100 rounded-0 text-start text-truncate"
         >
           <span className="me-1">#</span>
-          {leoProfanity.clean(channel.name)}
+          {channel.name}
         </Button>
       )}
     </li>

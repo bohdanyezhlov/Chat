@@ -5,6 +5,7 @@ import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRollbar } from '@rollbar/react';
+import leoProfanity from 'leo-profanity';
 
 import { useAuth, useSocket } from '../../hooks';
 
@@ -29,8 +30,9 @@ const EnterNewMessage = ({ channelId }) => {
     initialValues: { body: '' },
     validationSchema,
     onSubmit: async ({ body }) => {
+      const filteredBody = leoProfanity.clean(body);
       const message = {
-        body,
+        body: filteredBody,
         channelId,
         username,
       };

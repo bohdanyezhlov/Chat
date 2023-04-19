@@ -1,5 +1,3 @@
-import leoProfanity from 'leo-profanity';
-
 export const getCurrentChannel = (state) => {
   const { channels, currentChannelId } = state.channels;
   const currentChannel = channels.find((c) => c.id === currentChannelId);
@@ -11,12 +9,8 @@ export const getMessagesForCurrentChannel = (state) => {
   const { currentChannelId } = state.channels;
   const { messages } = state.messages;
   const messagesForCurrentChannel = messages.filter((m) => m.channelId === currentChannelId);
-  const filteredMessages = messagesForCurrentChannel.map((m) => ({
-    ...m,
-    body: leoProfanity.clean(m.body),
-  }));
 
-  return filteredMessages;
+  return messagesForCurrentChannel;
 };
 
 export const getChannelsNames = (state) => {
@@ -29,9 +23,8 @@ export const getChannelsNames = (state) => {
 export const getCurrentChannelName = (currentId) => (state) => {
   const { channels } = state.channels;
   const [currentChannel] = channels.filter((c) => c.id === currentId);
-  const filteredChannelName = leoProfanity.clean(currentChannel?.name);
 
-  return filteredChannelName;
+  return currentChannel?.name;
 };
 
 export const getLastChannelId = (state) => {
