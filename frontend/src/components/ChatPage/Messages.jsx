@@ -1,43 +1,25 @@
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import leoProfanity from 'leo-profanity';
 
+import { getCurrentChannel, getFilteredMessagesForCurrentChannel, getCurrentFilteredChannelName } from '../../selectors';
 import EnterNewMessage from './EnterNewMessage';
 
-const Message = ({
-  index, body, username, latestMessageRef, messagesForCurrentChannel,
-}) => (
-  <div className="text-break mb-2" ref={messagesForCurrentChannel.length - 1 === index ? latestMessageRef : null}>
-    <strong>{username}</strong>
+const Message = ({ message }) => (
+  <div className="text-break mb-2">
+    <strong>{message.username}</strong>
     :
     {' '}
-    {body}
+    {message.body}
   </div>
 );
-
-const getCurrentChannel = (state) => {
-  const { channels, currentChannelId } = state.channels;
-  const currentChannel = channels.find((c) => c.id === currentChannelId);
-  return currentChannel;
-};
-
-const getMessagesForCurrentChannel = (state) => {
-  const { currentChannelId } = state.channels;
-  const { messages } = state.messages;
-  const messagesForCurrentChannel = messages.filter((m) => m.channelId === currentChannelId);
-  return messagesForCurrentChannel;
-};
 
 const Messages = () => {
   const { t } = useTranslation();
   const latestMessageRef = useRef();
   const channel = useSelector(getCurrentChannel);
-  const messages = useSelector(getMessagesForCurrentChannel);
-  const filteredMessages = messages.map((m) => ({
-    ...m,
-    body: leoProfanity.clean(m.body),
-  }));
+  const messages = useSelector(getFilteredMessagesForCurrentChannel);
+  const channelName = useSelector(getCurrentFilteredChannelName(channel?.id));
 
   useEffect(() => {
     if (latestMessageRef.current) { // messages can be empty array
@@ -52,26 +34,23 @@ const Messages = () => {
           <strong>
             #
             {' '}
-            {leoProfanity.clean(channel?.name)}
+            {channelName}
           </strong>
         </p>
         <span className="text-muted">
-          {`${filteredMessages.length} ${t('chat.messageCount', {
-            count: filteredMessages.length,
+          {`${messages.length} ${t('chat.messageCount', {
+            count: messages.length,
           })}`}
         </span>
       </div>
       <div className="chat-messages overflow-auto px-5">
-        {filteredMessages.map(({ username, body, id }, index) => (
+        {messages.map((message) => (
           <Message
-            username={username}
-            body={body}
-            key={id}
-            index={index}
-            latestMessageRef={latestMessageRef}
-            messagesForCurrentChannel={filteredMessages}
+            key={message.id}
+            message={message}
           />
         ))}
+        <div ref={latestMessageRef} />
       </div>
       <div className="mt-auto px-5 py-3">
         <EnterNewMessage channelId={channel?.id} />

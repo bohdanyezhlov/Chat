@@ -40,7 +40,12 @@ export default async () => {
 
     socket.volatile.emit(eventName, data, (response) => {
       clearTimeout(timeout);
-      resolve(response);
+
+      if (response.status === 'ok') {
+        resolve(response);
+      }
+
+      reject();
     });
   });
 

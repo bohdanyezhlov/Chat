@@ -5,35 +5,33 @@ import { PlusSquare } from 'react-bootstrap-icons';
 import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import leoProfanity from 'leo-profanity';
 
-import { setCurrentChannel } from '../../slices/channelsSlice';
+import { getLastChannelId } from '../../selectors';
+import { setCurrentChannel, defaultCurrentChannelId } from '../../slices/channelsSlice';
 import { openModal } from '../../slices/modalSlice';
 
 const Channel = (props) => {
   const {
-    name,
-    removable,
-    handleSetCurrentChannel,
+    channel,
     isActive,
-    id,
-    variant,
-    t,
-    currentChannelRef,
+    handleSetCurrentChannel,
     handleRemoveChannel,
     handleRenameChannel,
   } = props;
+  const { t } = useTranslation();
+  const variant = isActive ? 'secondary' : '';
 
   return (
-    <li className="nav-item w-100" ref={isActive ? currentChannelRef : null}>
-      {removable ? (
+    <li className="nav-item w-100">
+      {channel.removable ? (
         <Dropdown as={ButtonGroup} className="d-flex">
           <Button
-            onClick={handleSetCurrentChannel(id)}
+            onClick={handleSetCurrentChannel(channel.id)}
             type="button"
             variant={variant}
             className="w-100 rounded-0 text-start text-truncate"
           >
             <span className="me-1">#</span>
-            {leoProfanity.clean(name)}
+            {leoProfanity.clean(channel.name)}
           </Button>
           <Dropdown.Toggle
             split
@@ -45,23 +43,23 @@ const Channel = (props) => {
             </span>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item onClick={handleRemoveChannel(id)}>
+            <Dropdown.Item onClick={handleRemoveChannel(channel.id)}>
               {t('channels.remove')}
             </Dropdown.Item>
-            <Dropdown.Item onClick={handleRenameChannel(id)}>
+            <Dropdown.Item onClick={handleRenameChannel(channel.id)}>
               {t('channels.rename')}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       ) : (
         <Button
-          onClick={handleSetCurrentChannel(id)}
+          onClick={handleSetCurrentChannel(channel.id)}
           type="button"
           variant={variant}
           className="w-100 rounded-0 text-start text-truncate"
         >
           <span className="me-1">#</span>
-          {leoProfanity.clean(name)}
+          {leoProfanity.clean(channel.name)}
         </Button>
       )}
     </li>
@@ -71,12 +69,19 @@ const Channel = (props) => {
 const Channels = () => {
   const { t } = useTranslation();
   const currentChannelRef = useRef();
+  const defaultChannelRef = useRef();
   const dispatch = useDispatch();
   const { channels, currentChannelId } = useSelector((state) => state.channels);
+  const lastChannelId = useSelector(getLastChannelId);
 
   useEffect(() => {
-    currentChannelRef.current.scrollIntoView({ behavior: 'auto' });
-  }, [channels.length]);
+    if (currentChannelId === defaultCurrentChannelId) {
+      defaultChannelRef.current.scrollIntoView({ behavior: 'auto' });
+    }
+    if (currentChannelId === lastChannelId) {
+      currentChannelRef.current.scrollIntoView({ behavior: 'auto' });
+    }
+  }, [currentChannelId, lastChannelId]);
 
   const handleSetCurrentChannel = (id) => () => {
     dispatch(setCurrentChannel({ currentChannelId: id }));
@@ -109,26 +114,22 @@ const Channels = () => {
         </Button>
       </div>
       <ul className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
-        {channels.map(({ id, name, removable }) => {
-          const isActive = id === currentChannelId;
-          const variant = isActive ? 'secondary' : '';
+        <div ref={defaultChannelRef} />
+        {channels.map((channel) => {
+          const isActive = channel.id === currentChannelId;
 
           return (
             <Channel
-              key={id}
-              id={id}
-              name={name}
-              removable={removable}
+              key={channel.id}
+              channel={channel}
               isActive={isActive}
-              variant={variant}
               handleSetCurrentChannel={handleSetCurrentChannel}
-              currentChannelRef={currentChannelRef}
-              t={t}
               handleRemoveChannel={handleRemoveChannel}
               handleRenameChannel={handleRenameChannel}
             />
           );
         })}
+        <div ref={currentChannelRef} />
       </ul>
     </>
   );

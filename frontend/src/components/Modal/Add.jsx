@@ -2,21 +2,22 @@ import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import {
   Modal, FormGroup, FormControl, Form, Button,
 } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
 
+import validationSchema from './validationSchema';
 import { useSocket } from '../../hooks';
 import { setCurrentChannel } from '../../slices/channelsSlice';
+import { getChannelsNames } from '../../selectors';
 
 const Add = (props) => {
   const { t } = useTranslation();
   const { handleClose } = props;
   const { addChannel } = useSocket();
-  const channelsNames = useSelector((state) => state.channels.channels.map(({ name }) => name));
+  const channelsNames = useSelector(getChannelsNames);
   const rollbar = useRollbar();
   const dispatch = useDispatch();
 
@@ -25,18 +26,9 @@ const Add = (props) => {
     inputRef.current.focus();
   }, []);
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string()
-      .trim()
-      .min(3, 'modals.min')
-      .max(20, 'modals.max')
-      .notOneOf(channelsNames, 'modals.uniq')
-      .required('modals.required'),
-  });
-
   const formik = useFormik({
     initialValues: { name: '' },
-    validationSchema,
+    validationSchema: validationSchema(channelsNames),
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async ({ name }) => {

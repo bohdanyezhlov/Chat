@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
 
-const defaultCurrentChannelId = 1;
+export const defaultCurrentChannelId = 1;
 
 const channelsReducer = createSlice({
   name: 'channels',
