@@ -11,14 +11,6 @@ export const getMessagesForCurrentChannel = (state) => {
   const { currentChannelId } = state.channels;
   const { messages } = state.messages;
   const messagesForCurrentChannel = messages.filter((m) => m.channelId === currentChannelId);
-
-  return messagesForCurrentChannel;
-};
-
-export const getFilteredMessagesForCurrentChannel = (state) => {
-  const { currentChannelId } = state.channels;
-  const { messages } = state.messages;
-  const messagesForCurrentChannel = messages.filter((m) => m.channelId === currentChannelId);
   const filteredMessages = messagesForCurrentChannel.map((m) => ({
     ...m,
     body: leoProfanity.clean(m.body),
@@ -35,13 +27,6 @@ export const getChannelsNames = (state) => {
 };
 
 export const getCurrentChannelName = (currentId) => (state) => {
-  const { channels } = state.channels;
-  const [currentChannel] = channels.filter((c) => c.id === currentId);
-
-  return currentChannel.name;
-};
-
-export const getCurrentFilteredChannelName = (currentId) => (state) => {
   const { channels } = state.channels;
   const [currentChannel] = channels.filter((c) => c.id === currentId);
   const filteredChannelName = leoProfanity.clean(currentChannel?.name);

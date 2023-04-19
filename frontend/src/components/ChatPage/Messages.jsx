@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { getCurrentChannel, getFilteredMessagesForCurrentChannel, getCurrentFilteredChannelName } from '../../selectors';
+import { getCurrentChannel, getMessagesForCurrentChannel, getCurrentChannelName } from '../../selectors';
 import EnterNewMessage from './EnterNewMessage';
 
 const Message = ({ message }) => (
@@ -18,8 +18,8 @@ const Messages = () => {
   const { t } = useTranslation();
   const latestMessageRef = useRef();
   const channel = useSelector(getCurrentChannel);
-  const messages = useSelector(getFilteredMessagesForCurrentChannel);
-  const channelName = useSelector(getCurrentFilteredChannelName(channel?.id));
+  const messages = useSelector(getMessagesForCurrentChannel);
+  const channelName = useSelector(getCurrentChannelName(channel?.id));
 
   useEffect(() => {
     if (latestMessageRef.current) { // messages can be empty array
