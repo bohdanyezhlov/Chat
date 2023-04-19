@@ -16,7 +16,7 @@ const Rename = (props) => {
   const { handleClose } = props;
   const id = useSelector((state) => state.modal.info);
   const channelsNames = useSelector(getChannelsNames);
-  const currentChannelName = useSelector(getCurrentChannelName);
+  const currentChannelName = useSelector(getCurrentChannelName(id));
   const { t } = useTranslation();
   const { renameChannel } = useSocket();
   const rollbar = useRollbar();
