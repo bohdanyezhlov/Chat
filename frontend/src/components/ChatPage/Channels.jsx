@@ -2,7 +2,9 @@ import { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { PlusSquare } from 'react-bootstrap-icons';
-import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
+import {
+  Dropdown, ButtonGroup, Button, OverlayTrigger, Tooltip,
+} from 'react-bootstrap';
 import leoProfanity from 'leo-profanity';
 
 import { getLastChannelId } from '../../selectors';
@@ -103,15 +105,21 @@ const Channels = () => {
     <>
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
         <strong>{t('channels.channels')}</strong>
-        <Button
-          type="button"
-          variant="group-vertical"
-          className="p-0 text-primary"
-          onClick={handleAddChannel}
+        <OverlayTrigger
+          placement="top"
+          delay={{ show: 250, hide: 200 }}
+          overlay={<Tooltip id="add-channel-tooltip">{t('modals.add')}</Tooltip>}
         >
-          <PlusSquare size={20} />
-          <span className="visually-hidden">+</span>
-        </Button>
+          <Button
+            type="button"
+            variant="group-vertical"
+            className="p-0 text-primary"
+            onClick={handleAddChannel}
+          >
+            <PlusSquare size={20} />
+            <span className="visually-hidden">+</span>
+          </Button>
+        </OverlayTrigger>
       </div>
       <ul className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
         <div ref={defaultChannelRef} />
