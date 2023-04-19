@@ -12,6 +12,21 @@ import { useAuth } from '../hooks';
 import signupImage from '../assets/signupImage.jpg';
 import routes from '../routes';
 
+const validationSchema = Yup.object().shape({
+  username: Yup.string()
+    .required('signup.required')
+    .min(3, 'signup.usernameConstraints')
+    .max(20, 'signup.usernameConstraints')
+    .trim(),
+  password: Yup.string()
+    .required('signup.required')
+    .min(6, 'signup.passMin')
+    .trim(),
+  confirmPassword: Yup.string()
+    .required('signup.required')
+    .oneOf([Yup.ref('password'), null], 'signup.mustMatch'),
+});
+
 const Signup = () => {
   const rollbar = useRollbar();
   const auth = useAuth();
@@ -23,21 +38,6 @@ const Signup = () => {
   useEffect(() => {
     inputRef.current.focus();
   }, []);
-
-  const validationSchema = Yup.object().shape({
-    username: Yup.string()
-      .required('signup.required')
-      .min(3, 'signup.usernameConstraints')
-      .max(20, 'signup.usernameConstraints')
-      .trim(),
-    password: Yup.string()
-      .required('signup.required')
-      .min(6, 'signup.passMin')
-      .trim(),
-    confirmPassword: Yup.string()
-      .required('signup.required')
-      .oneOf([Yup.ref('password'), null], 'signup.mustMatch'),
-  });
 
   const formik = useFormik({
     initialValues: { username: '', password: '', confirmPassword: '' },
