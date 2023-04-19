@@ -9,6 +9,8 @@ export default {
       renamed: 'Канал переименован',
       removed: 'Канал удалён',
     },
+    russian: 'Русский',
+    english: 'English',
     loading: 'Загрузка...',
     login: {
       username: 'Ваш ник',

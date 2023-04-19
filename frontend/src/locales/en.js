@@ -9,6 +9,8 @@ export default {
       renamed: 'Channel renamed',
       removed: 'Channel removed',
     },
+    russian: 'Русский',
+    english: 'English',
     loading: 'Loading...',
     login: {
       username: 'Username',
@@ -39,8 +41,9 @@ export default {
     logout: 'Log out',
     chat: {
       send: 'Send',
-      messageCount: 'message',
-      messageCount_plural: 'messages',
+      messageCount_zero: 'messages',
+      messageCount_one: 'message',
+      messageCount_other: 'messages',
       newMessage: 'New message',
       enterNewMessage: 'Enter new message...',
     },

@@ -1,5 +1,7 @@
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import i18next from 'i18next';
+// eslint-disable-next-line import/no-extraneous-dependencies
+// import detector from 'i18next-browser-languagedetector';
 import io from 'socket.io-client';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
@@ -18,10 +20,13 @@ export default async () => {
 
   const i18n = i18next.createInstance();
 
-  await i18n.use(initReactI18next).init({
-    fallbackLng: 'ru',
-    resources,
-  });
+  await i18n
+    // .use(detector)
+    .use(initReactI18next)
+    .init({
+      fallbackLng: 'ru',
+      resources,
+    });
 
   leoProfanity.add(leoProfanity.getDictionary('en'));
   leoProfanity.add(leoProfanity.getDictionary('fr'));
