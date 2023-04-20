@@ -11,6 +11,8 @@ export default {
     },
     russian: 'Русский',
     english: 'English',
+    ukrainian: 'Українська',
+    polish: 'Polski',
     loading: 'Загрузка...',
     login: {
       username: 'Ваш ник',

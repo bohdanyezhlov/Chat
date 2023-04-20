@@ -21,11 +21,17 @@ const LangSwitcher = () => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item as={Button} onClick={handleChangeLanguage('ru')} active={i18n.language === 'ru'}>
-          {t('russian')}
-        </Dropdown.Item>
         <Dropdown.Item as={Button} onClick={handleChangeLanguage('en')} active={i18n.language === 'en'}>
           {t('english')}
+        </Dropdown.Item>
+        <Dropdown.Item as={Button} onClick={handleChangeLanguage('ukr')} active={i18n.language === 'ukr'}>
+          {t('ukrainian')}
+        </Dropdown.Item>
+        <Dropdown.Item as={Button} onClick={handleChangeLanguage('pl')} active={i18n.language === 'pl'}>
+          {t('polish')}
+        </Dropdown.Item>
+        <Dropdown.Item as={Button} onClick={handleChangeLanguage('ru')} active={i18n.language === 'ru'}>
+          {t('russian')}
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
