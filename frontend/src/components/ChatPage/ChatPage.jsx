@@ -14,7 +14,7 @@ import Channels from './Channels';
 import Messages from './Messages';
 
 const ChatPage = () => {
-  const t = useTranslation();
+  const { t } = useTranslation();
   const rollbar = useRollbar();
   const navigate = useNavigate();
   const dispatch = useDispatch();
