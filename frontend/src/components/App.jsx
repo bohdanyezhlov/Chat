@@ -1,4 +1,6 @@
-import { useState, useMemo } from 'react';
+import {
+  useState, useMemo, lazy, Suspense,
+} from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,15 +10,17 @@ import {
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
+import Loading from './Loading';
 import Navbar from './Navbar';
-import ChatPage from './ChatPage/ChatPage';
 import LoginPage from './LoginPage';
-import SignupPage from './SignupPage';
-import NotFoundPage from './NotFoundPage';
 import { useAuth } from '../hooks';
 import { AuthContext } from '../contexts';
 import Modal from './Modal/Modal';
 import routes from '../routes';
+
+const ChatPage = lazy(() => import('./ChatPage/ChatPage'));
+const NotFoundPage = lazy(() => import('./NotFoundPage'));
+const SignupPage = lazy(() => import('./SignupPage'));
 
 const AuthProvider = ({ children }) => {
   const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -74,19 +78,21 @@ const App = () => (
     <Router>
       <div className="d-flex flex-column h-100">
         <Navbar />
-        <Routes>
-          <Route
-            path={routes.chatPagePath()}
-            element={(
-              <PrivateRoute>
-                <ChatPage />
-              </PrivateRoute>
-                )}
-          />
-          <Route path="*" element={<NotFoundPage />} />
-          <Route path={routes.loginPagePath()} element={<LoginPage />} />
-          <Route path={routes.signupPagePath()} element={<SignupPage />} />
-        </Routes>
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            <Route
+              path={routes.chatPagePath()}
+              element={(
+                <PrivateRoute>
+                  <ChatPage />
+                </PrivateRoute>
+            )}
+            />
+            <Route path="*" element={<NotFoundPage />} />
+            <Route path={routes.signupPagePath()} element={<SignupPage />} />
+            <Route path={routes.loginPagePath()} element={<LoginPage />} />
+          </Routes>
+        </Suspense>
         <ToastContainer />
         <Modal />
       </div>

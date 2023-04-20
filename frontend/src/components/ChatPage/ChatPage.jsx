@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Spinner } from 'react-bootstrap';
 import { useRollbar } from '@rollbar/react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 
+import Loading from '../Loading';
 import { setInitialState } from '../../slices/channelsSlice';
 import routes from '../../routes';
 import { useAuth } from '../../hooks';
@@ -49,11 +49,7 @@ const ChatPage = () => {
     fetchData();
   }, [getAuthHeader, dispatch, navigate, rollbar, t]);
 
-  return isLoading ? (
-    <div className="d-flex justify-content-center mt-5 h-100 align-items-center">
-      <Spinner animation="border" variant="primary" />
-    </div>
-  ) : (
+  return isLoading ? <Loading /> : (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
         <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
