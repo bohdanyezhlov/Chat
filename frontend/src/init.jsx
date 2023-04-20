@@ -15,6 +15,51 @@ import { addMessage } from './slices/messagesSlice';
 import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
 import App from './components/App';
 
+const socketInit = (store) => {
+  const socket = io();
+
+  socket.on('newMessage', (payload) => {
+    store.dispatch(addMessage({ message: payload }));
+  });
+
+  socket.on('newChannel', (payload) => {
+    store.dispatch(addChannel({ channel: payload }));
+  });
+
+  socket.on('removeChannel', (payload) => {
+    store.dispatch(removeChannel({ currentChannelId: payload }));
+  });
+
+  socket.on('renameChannel', (payload) => {
+    store.dispatch(renameChannel({ updatedChannel: payload }));
+  });
+
+  const asyncEmit = (eventName, data) => new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error('Request timed out'));
+    }, 5000);
+
+    socket.volatile.emit(eventName, data, (response) => {
+      clearTimeout(timeout);
+
+      if (response.status === 'ok') {
+        resolve(response);
+      }
+
+      reject();
+    });
+  });
+
+  const socketApi = {
+    sendMessage: (data) => asyncEmit('newMessage', data),
+    addChannel: (data) => asyncEmit('newChannel', data),
+    removeChannel: (data) => asyncEmit('removeChannel', data),
+    renameChannel: (data) => asyncEmit('renameChannel', data),
+  };
+
+  return socketApi;
+};
+
 export default async () => {
   const isProduction = process.env.NODE_ENV === 'production';
 
@@ -36,47 +81,7 @@ export default async () => {
     reducer,
   });
 
-  const socket = io();
-
-  const asyncEmit = (eventName, data) => new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error('Request timed out'));
-    }, 5000);
-
-    socket.volatile.emit(eventName, data, (response) => {
-      clearTimeout(timeout);
-
-      if (response.status === 'ok') {
-        resolve(response);
-      }
-
-      reject();
-    });
-  });
-
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const socketApi = {
-    sendMessage: (data) => asyncEmit('newMessage', data),
-    addChannel: (data) => asyncEmit('newChannel', data),
-    removeChannel: (data) => asyncEmit('removeChannel', data),
-    renameChannel: (data) => asyncEmit('renameChannel', data),
-  };
-
-  socket.on('newMessage', (payload) => {
-    store.dispatch(addMessage({ message: payload }));
-  });
-
-  socket.on('newChannel', (payload) => {
-    store.dispatch(addChannel({ channel: payload }));
-  });
-
-  socket.on('removeChannel', (payload) => {
-    store.dispatch(removeChannel({ currentChannelId: payload }));
-  });
-
-  socket.on('renameChannel', (payload) => {
-    store.dispatch(renameChannel({ updatedChannel: payload }));
-  });
+  const socketApi = socketInit(store);
 
   const rollbarConfig = {
     enabled: isProduction,
