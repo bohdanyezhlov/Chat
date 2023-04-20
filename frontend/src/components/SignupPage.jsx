@@ -42,7 +42,7 @@ const Signup = () => {
   const formik = useFormik({
     initialValues: { username: '', password: '', confirmPassword: '' },
     validationSchema,
-    onSubmit: async (values, { setErrors }) => {
+    onSubmit: async (values) => {
       setSignupFailed(false);
 
       try {
@@ -59,7 +59,6 @@ const Signup = () => {
         }
 
         if (error.response.status === 409) {
-          setErrors({ confirmPassword: 'signup.alreadyExists' });
           setSignupFailed(true);
           inputRef.current.select();
         } else {
@@ -161,12 +160,9 @@ const Signup = () => {
                   }
                   />
                   <Form.Label>{t('signup.confirm')}</Form.Label>
-                  {formik.touched.confirmPassword
-                  && formik.errors.confirmPassword && (
-                    <div className="invalid-tooltip">
-                      {t(formik.errors.confirmPassword)}
-                    </div>
-                  )}
+                  <div className="invalid-tooltip">
+                    {signupFailed ? t('signup.alreadyExists') : t(formik.errors.confirmPassword)}
+                  </div>
                 </Form.Group>
 
                 <Button
