@@ -60,7 +60,7 @@ const socketInit = (store) => {
   return socketApi;
 };
 
-export default async () => {
+const init = async () => {
   const isProduction = process.env.NODE_ENV === 'production';
 
   const i18n = i18next.createInstance();
@@ -85,7 +85,7 @@ export default async () => {
 
   const rollbarConfig = {
     enabled: isProduction,
-    accessToken: process.env.ROLLBAR_TOKEN,
+    accessToken: import.meta.env.ROLLBAR_TOKEN,
   };
 
   return (
@@ -102,3 +102,5 @@ export default async () => {
     </RollbarProvider>
   );
 };
+
+export default init;

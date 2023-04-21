@@ -30,6 +30,7 @@ const Login = () => {
       setAuthFailed(false);
 
       try {
+        console.log(routes.loginPath());
         const response = await axios.post(routes.loginPath(), values);
         auth.logIn(response.data);
         const { from } = location.state || {
