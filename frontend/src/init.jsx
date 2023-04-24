@@ -1,7 +1,6 @@
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import i18next from 'i18next';
-// eslint-disable-next-line import/no-extraneous-dependencies
-// import detector from 'i18next-browser-languagedetector';
+import detector from 'i18next-browser-languagedetector';
 import io from 'socket.io-client';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
@@ -66,7 +65,7 @@ const init = async () => {
   const i18n = i18next.createInstance();
 
   await i18n
-    // .use(detector)
+    .use(detector)
     .use(initReactI18next)
     .init({
       fallbackLng: 'ru',

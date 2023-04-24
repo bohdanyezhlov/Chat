@@ -17,14 +17,14 @@ const LangSwitcher = () => {
   return (
     <Dropdown drop="start" className="mx-2">
       <Dropdown.Toggle variant="primary" id="dropdown-basic">
-        {i18n.language.toUpperCase()}
+        {i18n.language.split('-')[0].toUpperCase()}
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
         <Dropdown.Item as={Button} onClick={handleChangeLanguage('en')} active={i18n.language === 'en'}>
           {t('english')}
         </Dropdown.Item>
-        <Dropdown.Item as={Button} onClick={handleChangeLanguage('ukr')} active={i18n.language === 'ukr'}>
+        <Dropdown.Item as={Button} onClick={handleChangeLanguage('ua')} active={i18n.language === 'ua'}>
           {t('ukrainian')}
         </Dropdown.Item>
         <Dropdown.Item as={Button} onClick={handleChangeLanguage('pl')} active={i18n.language === 'pl'}>

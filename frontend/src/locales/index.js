@@ -1,8 +1,8 @@
 import ru from './ru';
 import en from './en';
-import ukr from './ukr';
+import ua from './ua';
 import pl from './pl';
 
 export default {
-  ru, en, ukr, pl,
+  ru, en, ua, pl,
 };
