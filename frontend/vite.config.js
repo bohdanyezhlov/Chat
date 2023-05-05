@@ -7,7 +7,11 @@ export default defineConfig(() => ({
   server: {
     open: true,
     proxy: {
-      '/api': 'http://localhost:5001',
+      '/api': 'http://0.0.0.0:5001',
+      '/socket.io': {
+        target: 'ws://0.0.0.0:5001',
+        ws: true,
+      },
     },
   },
   build: {
