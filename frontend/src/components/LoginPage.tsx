@@ -1,27 +1,28 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRollbar } from '@rollbar/react';
+import axios, { AxiosError } from 'axios';
 import { useFormik } from 'formik';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useRollbar } from '@rollbar/react';
 
-import routes from '../routes';
-import { useAuth } from '../hooks';
 import loginImage from '../assets/loginImage.jpg';
+import { useAuth } from '../hooks';
+import routes from '../routes';
+import { AuthType } from '../types';
 
 const Login = () => {
   const rollbar = useRollbar();
-  const auth = useAuth();
+  const auth = useAuth() as AuthType;
   const [authFailed, setAuthFailed] = useState(false);
-  const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, []);
 
   const formik = useFormik({
@@ -40,16 +41,17 @@ const Login = () => {
         console.log(error);
         rollbar.error(t('errors.unknown'), error, values);
 
-        if (!error.isAxiosError) {
-          toast.error(t('errors.unknown'));
+        // FIXME: ?
+        if (!(error as AxiosError).isAxiosError) {
+          toast.error(t('errors.unknown') as string); // FIXME: ?
           return;
         }
-
-        if (error.response.status === 401) {
+        // FIXME: ?
+        if ((error as AxiosError).response?.status === 401) {
           setAuthFailed(true);
-          inputRef.current.select();
+          inputRef.current?.select();
         } else {
-          toast.error(t('errors.network'));
+          toast.error(t('errors.network') as string); // FIXME: ?
         }
       }
     },
@@ -127,8 +129,7 @@ const Login = () => {
             </div>
             <div className="card-footer p-4">
               <div className="text-center">
-                <span>{t('login.newToChat')}</span>
-                {' '}
+                <span>{t('login.newToChat')}</span>{' '}
                 <Link to={routes.signupPagePath()}>{t('login.signup')}</Link>
               </div>
             </div>

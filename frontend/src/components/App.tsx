@@ -1,33 +1,39 @@
+import { Suspense, lazy, useMemo, useState } from 'react';
 import {
-  useState, useMemo, lazy, Suspense,
-} from 'react';
-import {
+  Navigate,
+  Route,
   BrowserRouter as Router,
   Routes,
-  Route,
   useLocation,
-  Navigate,
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
-import Loading from './Loading';
-import Navbar from './Navbar';
-import LoginPage from './LoginPage';
-import { useAuth } from '../hooks';
 import { AuthContext } from '../contexts';
-import Modal from './Modal/Modal';
+import { useAuth } from '../hooks';
 import routes from '../routes';
+import { AuthType } from '../types';
+import Loading from './Loading';
+import LoginPage from './LoginPage';
+import Modal from './Modal/Modal';
+import Navbar from './Navbar';
 
 const ChatPage = lazy(() => import('./ChatPage/ChatPage'));
 const NotFoundPage = lazy(() => import('./NotFoundPage'));
 const SignupPage = lazy(() => import('./SignupPage'));
 
-const AuthProvider = ({ children }) => {
-  const currentUser = JSON.parse(localStorage.getItem('user'));
+// TODO: change name
+type Props = {
+  children: React.ReactNode;
+};
+
+const AuthProvider = ({ children }: Props) => {
+  const userJson = localStorage.getItem('user');
+  const currentUser = userJson ? JSON.parse(userJson) : null;
+
   const [user, setUser] = useState(
-    currentUser ? { username: currentUser.username } : null,
+    currentUser ? { username: currentUser.username } : null
   );
-  const logIn = (userData) => {
+  const logIn = (userData: any) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setUser({ username: userData.username });
   };
@@ -38,9 +44,10 @@ const AuthProvider = ({ children }) => {
   };
 
   const getAuthHeader = () => {
-    const userData = JSON.parse(localStorage.getItem('user'));
+    const userData = JSON.parse(localStorage.getItem('user') || '');
+    const token = userData?.token;
 
-    return userData?.token ? { Authorization: `Bearer ${userData.token}` } : {};
+    return token ? { Authorization: `Bearer ${token}` } : {};
   };
 
   const authService = useMemo(
@@ -50,24 +57,21 @@ const AuthProvider = ({ children }) => {
       getAuthHeader,
       user,
     }),
-    [user],
+    [user]
   );
 
   return (
-    <AuthContext.Provider
-      value={authService}
-    >
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authService}>{children}</AuthContext.Provider>
   );
 };
 
-const PrivateRoute = ({ children }) => {
-  const auth = useAuth();
+// FIXME: ?
+const PrivateRoute = ({ children }: Props): JSX.Element | null => {
+  const auth = useAuth() as AuthType;
   const location = useLocation();
 
   return auth.user ? (
-    children
+    (children as JSX.Element) // FIXME: ?
   ) : (
     <Navigate to={routes.loginPagePath()} state={{ from: location }} />
   );
@@ -82,11 +86,11 @@ const App = () => (
           <Routes>
             <Route
               path={routes.chatPagePath()}
-              element={(
+              element={
                 <PrivateRoute>
                   <ChatPage />
                 </PrivateRoute>
-            )}
+              }
             />
             <Route path="*" element={<NotFoundPage />} />
             <Route path={routes.signupPagePath()} element={<SignupPage />} />

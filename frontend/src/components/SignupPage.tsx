@@ -1,15 +1,15 @@
-import { useRef, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useRollbar } from '@rollbar/react';
 import axios from 'axios';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Form, Button } from 'react-bootstrap';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useRollbar } from '@rollbar/react';
+import * as Yup from 'yup';
 
-import { useAuth } from '../hooks';
 import signupImage from '../assets/signupImage.jpg';
+import { useAuth } from '../hooks';
 import routes from '../routes';
 
 const validationSchema = Yup.object().shape({
@@ -71,7 +71,6 @@ const Signup = () => {
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
-
         <div className="col-12 col-md-8 col-xxl-6">
           <div className="card shadow-sm">
             <div className="card-body d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
@@ -82,10 +81,7 @@ const Signup = () => {
                   src={signupImage}
                 />
               </div>
-              <Form
-                onSubmit={formik.handleSubmit}
-                className="w-50"
-              >
+              <Form onSubmit={formik.handleSubmit} className="w-50">
                 <h1 className="text-center mb-4">{t('signup.header')}</h1>
                 <Form.Group
                   controlId="formBasicUsername"
@@ -102,15 +98,15 @@ const Signup = () => {
                     ref={inputRef}
                     required
                     isInvalid={
-                    signupFailed
-                    || (formik.touched.username && formik.errors.username)
-                  }
+                      signupFailed ||
+                      (formik.touched.username && formik.errors.username)
+                    }
                   />
                   <Form.Label>{t('signup.username')}</Form.Label>
                   {formik.touched.username && formik.errors.username && (
-                  <div className="invalid-tooltip">
-                    {t(formik.errors.username)}
-                  </div>
+                    <div className="invalid-tooltip">
+                      {t(formik.errors.username)}
+                    </div>
                   )}
                 </Form.Group>
 
@@ -128,15 +124,15 @@ const Signup = () => {
                     value={formik.values.password}
                     required
                     isInvalid={
-                    signupFailed
-                    || (formik.touched.password && formik.errors.password)
-                  }
+                      signupFailed ||
+                      (formik.touched.password && formik.errors.password)
+                    }
                   />
                   <Form.Label>{t('signup.password')}</Form.Label>
                   {formik.touched.password && formik.errors.password && (
-                  <div className="invalid-tooltip">
-                    {t(formik.errors.password)}
-                  </div>
+                    <div className="invalid-tooltip">
+                      {t(formik.errors.password)}
+                    </div>
                   )}
                 </Form.Group>
 
@@ -154,14 +150,16 @@ const Signup = () => {
                     value={formik.values.confirmPassword}
                     required
                     isInvalid={
-                    signupFailed
-                    || (formik.touched.confirmPassword
-                      && formik.errors.confirmPassword)
-                  }
+                      signupFailed ||
+                      (formik.touched.confirmPassword &&
+                        formik.errors.confirmPassword)
+                    }
                   />
                   <Form.Label>{t('signup.confirm')}</Form.Label>
                   <div className="invalid-tooltip">
-                    {signupFailed ? t('signup.alreadyExists') : t(formik.errors.confirmPassword)}
+                    {signupFailed
+                      ? t('signup.alreadyExists')
+                      : t(formik.errors.confirmPassword)}
                   </div>
                 </Form.Group>
 

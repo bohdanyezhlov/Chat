@@ -1,53 +1,56 @@
-import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { useFormik } from 'formik';
-import {
-  Modal, FormGroup, FormControl, Form, Button,
-} from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
+import { useFormik } from 'formik';
 import leoProfanity from 'leo-profanity';
+import { useEffect, useRef } from 'react';
+import { Button, Form, FormControl, FormGroup, Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import validationSchema from './validationSchema';
 import { useSocket } from '../../hooks';
-import { getChannelsNames, getCurrentChannelName } from '../../selectors';
+import { getChannelsNames } from '../../selectors';
+import { setCurrentChannel } from '../../slices/channelsSlice';
+import { AddProps } from '../../types';
+import validationSchema from './validationSchema';
 
-const Rename = (props) => {
-  const { handleClose } = props;
-  const id = useSelector((state) => state.modal.info);
-  const channelsNames = useSelector(getChannelsNames);
-  const currentChannelName = useSelector(getCurrentChannelName(id));
+const Add = (props: AddProps) => {
   const { t } = useTranslation();
-  const { renameChannel } = useSocket();
+  const { handleClose } = props;
+  const { addChannel } = useSocket();
+  const channelsNames = useSelector(getChannelsNames);
   const rollbar = useRollbar();
+  const dispatch = useDispatch();
 
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
-    inputRef.current.select();
+    inputRef.current?.focus();
   }, []);
 
   const formik = useFormik({
-    initialValues: { name: currentChannelName },
+    initialValues: { name: '' },
     validationSchema: validationSchema(channelsNames),
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async ({ name }) => {
       const filteredName = leoProfanity.clean(name);
-      const newChannelName = {
-        id,
+      const newChannel = {
         name: filteredName,
       };
 
       try {
-        await renameChannel(newChannelName);
+        const { data } = await addChannel(newChannel);
+        dispatch(setCurrentChannel({ currentChannelId: data.id }));
+        toast.success(t('channels.created') as string); // FIXME: ?
         formik.resetForm();
         handleClose();
-        toast.success(t('channels.renamed'));
       } catch (error) {
-        rollbar.error('channel renaming', error, name);
-        formik.setSubmitting(false);
         console.log(error);
+        // FIXME: ?
+        if (error instanceof Error) {
+          rollbar.error('channel adding', error, name);
+          formik.setSubmitting(false);
+        }
       }
     },
   });
@@ -55,14 +58,13 @@ const Rename = (props) => {
   return (
     <>
       <Modal.Header closeButton onHide={handleClose}>
-        <Modal.Title>{t('modals.rename')}</Modal.Title>
+        <Modal.Title>{t('modals.add')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <form onSubmit={formik.handleSubmit}>
           <FormGroup>
             <FormControl
-              id="name"
               className="mb-2"
               disabled={formik.isSubmitting}
               ref={inputRef}
@@ -75,9 +77,7 @@ const Rename = (props) => {
             <Form.Label className="visually-hidden" htmlFor="name">
               {t('modals.channelName')}
             </Form.Label>
-            {formik.touched.name && formik.errors.name && (
-              <div className="invalid-feedback">{t(formik.errors.name)}</div>
-            )}
+            <div className="invalid-feedback">{t(formik.errors.name)}</div>
           </FormGroup>
           <div className="d-flex justify-content-end">
             <Button
@@ -97,4 +97,4 @@ const Rename = (props) => {
   );
 };
 
-export default Rename;
+export default Add;

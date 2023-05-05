@@ -1,8 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { Modal as BootstrapModal } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { closeModal } from '../../slices/modalSlice';
-
 import Add from './Add';
 import Remove from './Remove';
 import Rename from './Rename';
@@ -25,7 +24,12 @@ const Modal = () => {
   const Component = modalTypes[modalType];
 
   return (
-    <BootstrapModal show={isOpened} onHide={handleClose} centered restoreFocus={false}>
+    <BootstrapModal
+      show={isOpened}
+      onHide={handleClose}
+      centered
+      restoreFocus={false}
+    >
       {Component && <Component handleClose={handleClose} />}
     </BootstrapModal>
   );

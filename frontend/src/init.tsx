@@ -1,20 +1,25 @@
-import { I18nextProvider, initReactI18next } from 'react-i18next';
+import { Store, configureStore } from '@reduxjs/toolkit';
+import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react';
 import i18next from 'i18next';
 import detector from 'i18next-browser-languagedetector';
-import io from 'socket.io-client';
-import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
 import leoProfanity from 'leo-profanity';
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
+import { Provider } from 'react-redux';
+import io from 'socket.io-client';
 
-import reducer from './slices';
-import resources from './locales';
-import { SocketContext } from './contexts';
-import { addMessage } from './slices/messagesSlice';
-import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
 import App from './components/App';
+import { SocketContext } from './contexts';
+import resources from './locales';
+import reducer from './slices';
+import {
+  addChannel,
+  removeChannel,
+  renameChannel,
+} from './slices/channelsSlice';
+import { addMessage } from './slices/messagesSlice';
+import { SocketResponseType } from './types';
 
-const socketInit = (store) => {
+const socketInit = (store: Store) => {
   const socket = io();
 
   socket.on('newMessage', (payload) => {
@@ -33,27 +38,28 @@ const socketInit = (store) => {
     store.dispatch(renameChannel({ updatedChannel: payload }));
   });
 
-  const asyncEmit = (eventName, data) => new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error('Request timed out'));
-    }, 5000);
+  const asyncEmit = (eventName: string, data: unknown) =>
+    new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Request timed out'));
+      }, 5000);
 
-    socket.volatile.emit(eventName, data, (response) => {
-      clearTimeout(timeout);
+      socket.volatile.emit(eventName, data, (response: SocketResponseType) => {
+        clearTimeout(timeout);
 
-      if (response.status === 'ok') {
-        resolve(response);
-      }
+        if (response.status === 'ok') {
+          resolve(response);
+        }
 
-      reject();
+        reject();
+      });
     });
-  });
 
   const socketApi = {
-    sendMessage: (data) => asyncEmit('newMessage', data),
-    addChannel: (data) => asyncEmit('newChannel', data),
-    removeChannel: (data) => asyncEmit('removeChannel', data),
-    renameChannel: (data) => asyncEmit('renameChannel', data),
+    sendMessage: (data: any) => asyncEmit('newMessage', data),
+    addChannel: (data: any) => asyncEmit('newChannel', data),
+    removeChannel: (data: any) => asyncEmit('removeChannel', data),
+    renameChannel: (data: any) => asyncEmit('renameChannel', data),
   };
 
   return socketApi;
@@ -64,16 +70,16 @@ const init = async () => {
 
   const i18n = i18next.createInstance();
 
-  await i18n
-    .use(detector)
-    .use(initReactI18next)
-    .init({
-      fallbackLng: 'ru',
-      resources,
-    });
+  await i18n.use(detector).use(initReactI18next).init({
+    fallbackLng: 'ru',
+    resources,
+  });
 
+  // @ts-expect-error: Unreachable code error
   leoProfanity.add(leoProfanity.getDictionary('en'));
+  // @ts-expect-error: Unreachable code error
   leoProfanity.add(leoProfanity.getDictionary('fr'));
+  // @ts-expect-error: Unreachable code error
   leoProfanity.add(leoProfanity.getDictionary('ru'));
 
   const store = configureStore({

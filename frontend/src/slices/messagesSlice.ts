@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
+
 import { removeChannel, setInitialState } from './channelsSlice';
 
 const messagesReducer = createSlice({

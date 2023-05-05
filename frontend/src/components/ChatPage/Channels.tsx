@@ -1,16 +1,24 @@
-import { useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { PlusSquare } from 'react-bootstrap-icons';
+import { useEffect, useRef } from 'react';
 import {
-  Dropdown, ButtonGroup, Button, OverlayTrigger, Tooltip,
+  Button,
+  ButtonGroup,
+  Dropdown,
+  OverlayTrigger,
+  Tooltip,
 } from 'react-bootstrap';
+import { PlusSquare } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getLastChannelId } from '../../selectors';
-import { setCurrentChannel, defaultCurrentChannelId } from '../../slices/channelsSlice';
+import {
+  defaultCurrentChannelId,
+  setCurrentChannel,
+} from '../../slices/channelsSlice';
 import { openModal } from '../../slices/modalSlice';
+import { ChannelProps } from '../../types';
 
-const Channel = (props) => {
+const Channel = (props: ChannelProps) => {
   const {
     channel,
     isActive,
@@ -34,14 +42,8 @@ const Channel = (props) => {
             <span className="me-1">#</span>
             {channel.name}
           </Button>
-          <Dropdown.Toggle
-            split
-            className="flex-grow-0"
-            variant={variant}
-          >
-            <span className="visually-hidden">
-              {t('channels.menu')}
-            </span>
+          <Dropdown.Toggle split className="flex-grow-0" variant={variant}>
+            <span className="visually-hidden">{t('channels.menu')}</span>
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item onClick={handleRemoveChannel(channel.id)}>
@@ -69,22 +71,24 @@ const Channel = (props) => {
 
 const Channels = () => {
   const { t } = useTranslation();
-  const currentChannelRef = useRef();
-  const defaultChannelRef = useRef();
+  const currentChannelRef = useRef<HTMLDivElement>(null);
+  const defaultChannelRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
-  const { channels, currentChannelId } = useSelector((state) => state.channels);
+  const { channels, currentChannelId } = useSelector(
+    (state: any) => state.channels
+  );
   const lastChannelId = useSelector(getLastChannelId);
 
   useEffect(() => {
     if (currentChannelId === defaultCurrentChannelId) {
-      defaultChannelRef.current.scrollIntoView({ behavior: 'auto' });
+      defaultChannelRef.current?.scrollIntoView({ behavior: 'auto' });
     }
     if (currentChannelId === lastChannelId) {
-      currentChannelRef.current.scrollIntoView({ behavior: 'auto' });
+      currentChannelRef.current?.scrollIntoView({ behavior: 'auto' });
     }
   }, [currentChannelId, lastChannelId]);
 
-  const handleSetCurrentChannel = (id) => () => {
+  const handleSetCurrentChannel = (id: number) => () => {
     dispatch(setCurrentChannel({ currentChannelId: id }));
   };
 
@@ -92,11 +96,11 @@ const Channels = () => {
     dispatch(openModal({ type: 'adding' }));
   };
 
-  const handleRemoveChannel = (id) => () => {
+  const handleRemoveChannel = (id: number) => () => {
     dispatch(openModal({ type: 'removing', info: id }));
   };
 
-  const handleRenameChannel = (id) => () => {
+  const handleRenameChannel = (id: number) => () => {
     dispatch(openModal({ type: 'renaming', info: id }));
   };
 
@@ -107,7 +111,9 @@ const Channels = () => {
         <OverlayTrigger
           placement="top"
           delay={{ show: 250, hide: 200 }}
-          overlay={<Tooltip id="add-channel-tooltip">{t('modals.add')}</Tooltip>}
+          overlay={
+            <Tooltip id="add-channel-tooltip">{t('modals.add')}</Tooltip>
+          }
         >
           <Button
             type="button"
@@ -122,7 +128,7 @@ const Channels = () => {
       </div>
       <ul className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
         <div ref={defaultChannelRef} />
-        {channels.map((channel) => {
+        {channels.map((channel: any) => {
           const isActive = channel.id === currentChannelId;
 
           return (

@@ -1,29 +1,30 @@
-import { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Form, InputGroup, Button } from 'react-bootstrap';
-import { ArrowRightSquare } from 'react-bootstrap-icons';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useRollbar } from '@rollbar/react';
+import { useFormik } from 'formik';
 import leoProfanity from 'leo-profanity';
+import { useEffect, useRef } from 'react';
+import { Button, Form, InputGroup } from 'react-bootstrap';
+import { ArrowRightSquare } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
 
 import { useAuth, useSocket } from '../../hooks';
+import { AuthType, EnterNewMessageProps } from '../../types';
 
 const validationSchema = Yup.object().shape({
   body: Yup.string().trim().required('required'),
 });
 
-const EnterNewMessage = ({ channelId }) => {
+const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
   const {
     user: { username },
   } = useAuth();
   const { sendMessage } = useSocket();
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, [channelId]);
 
   const formik = useFormik({
@@ -42,7 +43,7 @@ const EnterNewMessage = ({ channelId }) => {
         formik.resetForm();
       } catch (error) {
         formik.setSubmitting(false);
-        rollbar.error('sending new message', error, body);
+        rollbar.error('sending new message', error as Error, body); // FIXME: ?
         console.log(error);
       }
     },

@@ -1,13 +1,14 @@
-import { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 import { useRollbar } from '@rollbar/react';
+import { useState } from 'react';
+import { Button, Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { useSocket } from '../../hooks';
+import { RemoveProps } from '../../types';
 
-const Remove = (props) => {
+const Remove = (props: RemoveProps) => {
   const { t } = useTranslation();
   const { removeChannel } = useSocket();
   const [loading, setLoading] = useState(false);
@@ -21,11 +22,14 @@ const Remove = (props) => {
     try {
       await removeChannel({ id });
       handleClose();
-      toast.success(t('channels.removed'));
+      toast.success(t('channels.removed') as string); // FIXME: ?
     } catch (error) {
-      setLoading(false);
-      rollbar.error('channel renaming', error, id);
       console.log(error);
+      // FIXME: ?
+      if (error instanceof Error) {
+        setLoading(false);
+        rollbar.error('channel renaming', error, id);
+      }
     }
   };
 

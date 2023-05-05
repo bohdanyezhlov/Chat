@@ -1,6 +1,6 @@
 import { Navbar as BootstrapNavbar, Button, Dropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { useAuth } from '../hooks';
 import routes from '../routes';
@@ -8,7 +8,7 @@ import routes from '../routes';
 const LangSwitcher = () => {
   const { i18n, t } = useTranslation();
 
-  const handleChangeLanguage = (lang) => () => {
+  const handleChangeLanguage = (lang: string) => () => {
     if (lang !== i18n.language) {
       i18n.changeLanguage(lang);
     }
@@ -21,16 +21,32 @@ const LangSwitcher = () => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item as={Button} onClick={handleChangeLanguage('en')} active={i18n.language === 'en'}>
+        <Dropdown.Item
+          as={Button}
+          onClick={handleChangeLanguage('en')}
+          active={i18n.language === 'en'}
+        >
           {t('english')}
         </Dropdown.Item>
-        <Dropdown.Item as={Button} onClick={handleChangeLanguage('ua')} active={i18n.language === 'ua'}>
+        <Dropdown.Item
+          as={Button}
+          onClick={handleChangeLanguage('ua')}
+          active={i18n.language === 'ua'}
+        >
           {t('ukrainian')}
         </Dropdown.Item>
-        <Dropdown.Item as={Button} onClick={handleChangeLanguage('pl')} active={i18n.language === 'pl'}>
+        <Dropdown.Item
+          as={Button}
+          onClick={handleChangeLanguage('pl')}
+          active={i18n.language === 'pl'}
+        >
           {t('polish')}
         </Dropdown.Item>
-        <Dropdown.Item as={Button} onClick={handleChangeLanguage('ru')} active={i18n.language === 'ru'}>
+        <Dropdown.Item
+          as={Button}
+          onClick={handleChangeLanguage('ru')}
+          active={i18n.language === 'ru'}
+        >
           {t('russian')}
         </Dropdown.Item>
       </Dropdown.Menu>
@@ -42,7 +58,13 @@ const AuthButton = () => {
   const auth = useAuth();
   const { t } = useTranslation();
 
-  return auth.user && <Button onClick={auth.logOut} className="mx-2">{t('logout')}</Button>;
+  return (
+    auth.user && (
+      <Button onClick={auth.logOut} className="mx-2">
+        {t('logout')}
+      </Button>
+    )
+  );
 };
 
 const Navbar = () => {
