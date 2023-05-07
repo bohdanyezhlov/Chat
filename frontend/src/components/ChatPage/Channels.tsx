@@ -27,7 +27,7 @@ const Channel = (props: ChannelProps) => {
     handleRenameChannel,
   } = props;
   const { t } = useTranslation();
-  const variant = isActive ? 'secondary' : '';
+  const variant = isActive ? 'info' : '';
 
   return (
     <li className="nav-item w-100">
