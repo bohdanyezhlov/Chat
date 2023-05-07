@@ -39,7 +39,7 @@ export default {
       channelName: 'Chanel name',
       editChannelName: 'New channel name',
     },
-    hexletChat: 'Hexlet Chat',
+    logoChat: 'Chat App',
     logout: 'Log out',
     chat: {
       send: 'Send',

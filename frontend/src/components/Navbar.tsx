@@ -74,7 +74,7 @@ const Navbar = () => {
     <BootstrapNavbar bg="white" expand="lg" className="shadow-sm">
       <div className="container">
         <BootstrapNavbar.Brand as={Link} to={routes.chatPagePath()}>
-          {t('hexletChat')}
+          {t('logoChat')}
         </BootstrapNavbar.Brand>
         <div className="d-flex align-items-center">
           <LangSwitcher />
