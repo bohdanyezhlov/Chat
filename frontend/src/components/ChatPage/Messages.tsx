@@ -7,14 +7,13 @@ import {
   getCurrentChannelName,
   getMessagesForCurrentChannel,
 } from '../../selectors';
-import { MessageProps } from '../../types';
+import { MessageProps, Message as MessageType } from '../../types';
 import EnterNewMessage from './EnterNewMessage';
 
 const Message = ({ message }: MessageProps) => {
-  console.log(message);
   return (
     <div className="text-break mb-2">
-      <strong>{message?.username}</strong>: {message?.body}
+      <strong>{message.username}</strong>: {message.body}
     </div>
   );
 };
@@ -27,7 +26,6 @@ const Messages = () => {
   const channelName = useSelector(getCurrentChannelName(channel?.id));
 
   useEffect(() => {
-    // messages can be empty array // TODO: check
     latestMessageRef.current?.scrollIntoView({ behavior: 'auto' });
   }, [messages.length]);
 
@@ -44,9 +42,9 @@ const Messages = () => {
         </span>
       </div>
       <div className="chat-messages overflow-auto px-5">
-        {messages.map((message: any) => (
-          <Message key={message.id} message={message} />
-        ))}
+        {messages.map((message: MessageType) => {
+          return <Message key={message.id} message={message} />;
+        })}
         <div ref={latestMessageRef} />
       </div>
       <div className="mt-auto px-5 py-3">

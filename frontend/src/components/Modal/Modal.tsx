@@ -2,6 +2,7 @@ import { Modal as BootstrapModal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { closeModal } from '../../slices/modalSlice';
+import { RootState } from '../../types';
 import Add from './Add';
 import Remove from './Remove';
 import Rename from './Rename';
@@ -14,8 +15,8 @@ const modalTypes = {
 
 const Modal = () => {
   const dispatch = useDispatch();
-  const isOpened = useSelector((state) => state.modal.isOpened);
-  const modalType = useSelector((state) => state.modal.type);
+  const isOpened = useSelector((state: RootState) => state.modal.isOpened);
+  const modalType = useSelector((state: RootState) => state.modal.type);
 
   const handleClose = () => {
     dispatch(closeModal());

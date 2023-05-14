@@ -2,11 +2,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
 
+import { MessagesState } from '../types';
 import { removeChannel, setInitialState } from './channelsSlice';
+
+const initialState: MessagesState = {
+  messages: [],
+};
 
 const messagesReducer = createSlice({
   name: 'messages',
-  initialState: { messages: [] },
+  initialState,
   reducers: {
     addMessage(state, { payload }) {
       const { message } = payload;

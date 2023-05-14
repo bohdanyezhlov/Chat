@@ -2,11 +2,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
 
+import { ChannelsState } from '../types';
+
 export const defaultCurrentChannelId = 1;
+
+const initialState: ChannelsState = {
+  channels: [],
+  currentChannelId: defaultCurrentChannelId,
+};
 
 const channelsReducer = createSlice({
   name: 'channels',
-  initialState: { channels: [], currentChannelId: defaultCurrentChannelId },
+  initialState,
   reducers: {
     setInitialState(state, { payload }) {
       const { channels, currentChannelId } = payload;
@@ -32,7 +39,10 @@ const channelsReducer = createSlice({
     renameChannel(state, { payload }) {
       const { id, name } = payload.updatedChannel;
       const channel = state.channels.find((c) => c.id === id);
-      channel.name = name;
+
+      if (channel) {
+        channel.name = name;
+      }
     },
   },
 });

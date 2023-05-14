@@ -16,7 +16,7 @@ import {
   setCurrentChannel,
 } from '../../slices/channelsSlice';
 import { openModal } from '../../slices/modalSlice';
-import { ChannelProps } from '../../types';
+import { ChannelProps, Channel as ChannelType, RootState } from '../../types';
 
 const Channel = (props: ChannelProps) => {
   const {
@@ -27,7 +27,8 @@ const Channel = (props: ChannelProps) => {
     handleRenameChannel,
   } = props;
   const { t } = useTranslation();
-  const variant = isActive ? 'info' : '';
+  const variant = isActive ? 'primary' : '';
+  const buttonClass = 'w-100 rounded text-start text-truncate';
 
   return (
     <li className="nav-item w-100">
@@ -37,12 +38,17 @@ const Channel = (props: ChannelProps) => {
             onClick={handleSetCurrentChannel(channel.id)}
             type="button"
             variant={variant}
-            className="w-100 rounded-0 text-start text-truncate"
+            className={buttonClass}
           >
             <span className="me-1">#</span>
             {channel.name}
           </Button>
-          <Dropdown.Toggle split className="flex-grow-0" variant={variant}>
+          <Dropdown.Toggle
+            split
+            className="flex-grow-0 position-absolute end-0"
+            variant={variant}
+            style={{ zIndex: 1 }}
+          >
             <span className="visually-hidden">{t('channels.menu')}</span>
           </Dropdown.Toggle>
           <Dropdown.Menu>
@@ -59,7 +65,7 @@ const Channel = (props: ChannelProps) => {
           onClick={handleSetCurrentChannel(channel.id)}
           type="button"
           variant={variant}
-          className="w-100 rounded-0 text-start text-truncate"
+          className={buttonClass}
         >
           <span className="me-1">#</span>
           {channel.name}
@@ -75,7 +81,7 @@ const Channels = () => {
   const defaultChannelRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const { channels, currentChannelId } = useSelector(
-    (state: any) => state.channels
+    (state: RootState) => state.channels
   );
   const lastChannelId = useSelector(getLastChannelId);
 
@@ -128,7 +134,7 @@ const Channels = () => {
       </div>
       <ul className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
         <div ref={defaultChannelRef} />
-        {channels.map((channel: any) => {
+        {channels.map((channel: ChannelType) => {
           const isActive = channel.id === currentChannelId;
 
           return (

@@ -9,16 +9,16 @@ import { toast } from 'react-toastify';
 
 import { useSocket } from '../../hooks';
 import { getChannelsNames, getCurrentChannelName } from '../../selectors';
-import { RenameProps } from '../../types';
+import { RenameProps, RootState, SocketApiType } from '../../types';
 import validationSchema from './validationSchema';
 
 const Rename = (props: RenameProps) => {
   const { handleClose } = props;
-  const id = useSelector((state) => state.modal.info);
+  const id = useSelector((state: RootState) => state.modal.info);
   const channelsNames = useSelector(getChannelsNames);
   const currentChannelName = useSelector(getCurrentChannelName(id));
   const { t } = useTranslation();
-  const { renameChannel } = useSocket();
+  const { renameChannel } = useSocket() as SocketApiType;
   const rollbar = useRollbar();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,7 +33,7 @@ const Rename = (props: RenameProps) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async ({ name }) => {
-      const filteredName = leoProfanity.clean(name);
+      const filteredName = name ? leoProfanity.clean(name) : ''; // FIXME: ?
       const newChannelName = {
         id,
         name: filteredName,
@@ -46,11 +46,10 @@ const Rename = (props: RenameProps) => {
         toast.success(t('channels.renamed') as string);
       } catch (error) {
         console.log(error);
+        formik.setSubmitting(false);
+
         // FIXME: ?
-        if (error instanceof Error) {
-          rollbar.error('channel renaming', error, name);
-          formik.setSubmitting(false);
-        }
+        rollbar.error('channel renaming', error, name);
       }
     },
   });

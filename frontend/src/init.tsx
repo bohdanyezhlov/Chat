@@ -5,7 +5,7 @@ import detector from 'i18next-browser-languagedetector';
 import leoProfanity from 'leo-profanity';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { Provider } from 'react-redux';
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 import App from './components/App';
 import { SocketContext } from './contexts';
@@ -17,28 +17,37 @@ import {
   renameChannel,
 } from './slices/channelsSlice';
 import { addMessage } from './slices/messagesSlice';
-import { SocketResponseType } from './types';
+import {
+  AddChannelData,
+  Channel,
+  Message,
+  RemoveChannelData,
+  RenameChannelData,
+  SendMessageData,
+  SocketEventData,
+  SocketResponseType,
+} from './types';
 
 const socketInit = (store: Store) => {
   const socket = io();
 
-  socket.on('newMessage', (payload) => {
+  socket.on('newMessage', (payload: Message) => {
     store.dispatch(addMessage({ message: payload }));
   });
 
-  socket.on('newChannel', (payload) => {
+  socket.on('newChannel', (payload: Channel) => {
     store.dispatch(addChannel({ channel: payload }));
   });
 
-  socket.on('removeChannel', (payload) => {
+  socket.on('removeChannel', (payload: { id: number }) => {
     store.dispatch(removeChannel({ currentChannelId: payload }));
   });
 
-  socket.on('renameChannel', (payload) => {
+  socket.on('renameChannel', (payload: Channel) => {
     store.dispatch(renameChannel({ updatedChannel: payload }));
   });
 
-  const asyncEmit = (eventName: string, data: unknown) =>
+  const asyncEmit = (eventName: string, data: SocketEventData) =>
     new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         reject(new Error('Request timed out'));
@@ -56,10 +65,12 @@ const socketInit = (store: Store) => {
     });
 
   const socketApi = {
-    sendMessage: (data: any) => asyncEmit('newMessage', data),
-    addChannel: (data: any) => asyncEmit('newChannel', data),
-    removeChannel: (data: any) => asyncEmit('removeChannel', data),
-    renameChannel: (data: any) => asyncEmit('renameChannel', data),
+    sendMessage: (data: SendMessageData) => asyncEmit('newMessage', data),
+    addChannel: (data: AddChannelData) => asyncEmit('newChannel', data),
+    removeChannel: (data: RemoveChannelData) =>
+      asyncEmit('removeChannel', data),
+    renameChannel: (data: RenameChannelData) =>
+      asyncEmit('renameChannel', data),
   };
 
   return socketApi;
@@ -71,7 +82,7 @@ const init = async () => {
   const i18n = i18next.createInstance();
 
   await i18n.use(detector).use(initReactI18next).init({
-    fallbackLng: 'ru',
+    fallbackLng: 'en',
     resources,
   });
 

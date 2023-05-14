@@ -11,7 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import { AuthContext } from '../contexts';
 import { useAuth } from '../hooks';
 import routes from '../routes';
-import { AuthType } from '../types';
+import { AuthType, ChildrenProps, UserData } from '../types';
 import Loading from './Loading';
 import LoginPage from './LoginPage';
 import Modal from './Modal/Modal';
@@ -21,19 +21,15 @@ const ChatPage = lazy(() => import('./ChatPage/ChatPage'));
 const NotFoundPage = lazy(() => import('./NotFoundPage'));
 const SignupPage = lazy(() => import('./SignupPage'));
 
-// TODO: change name
-type Props = {
-  children: React.ReactNode;
-};
-
-const AuthProvider = ({ children }: Props) => {
+const AuthProvider = ({ children }: ChildrenProps) => {
   const userJson = localStorage.getItem('user');
   const currentUser = userJson ? JSON.parse(userJson) : null;
 
   const [user, setUser] = useState(
     currentUser ? { username: currentUser.username } : null
   );
-  const logIn = (userData: any) => {
+
+  const logIn = (userData: UserData) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setUser({ username: userData.username });
   };
@@ -65,8 +61,7 @@ const AuthProvider = ({ children }: Props) => {
   );
 };
 
-// FIXME: ?
-const PrivateRoute = ({ children }: Props): JSX.Element | null => {
+const PrivateRoute = ({ children }: ChildrenProps) => {
   const auth = useAuth() as AuthType;
   const location = useLocation();
 

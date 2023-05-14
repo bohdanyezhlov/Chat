@@ -39,7 +39,7 @@ const Login = () => {
         navigate(from);
       } catch (error) {
         console.log(error);
-        rollbar.error(t('errors.unknown'), error, values);
+        rollbar.error(t('errors.unknown'), error, values); // FIXME: ?
 
         // FIXME: ?
         if (!(error as AxiosError).isAxiosError) {

@@ -33,7 +33,9 @@ const ChatPage = () => {
         setIsLoading(false);
       } catch (error) {
         console.log(error);
-        rollbar.error('getting init data', error as Error); // FIXME: ?
+
+        // FIXME: ?
+        rollbar.error('getting init data', error);
 
         if (!(error as AxiosError).isAxiosError) {
           toast.error(t('errors.unknown') as string);

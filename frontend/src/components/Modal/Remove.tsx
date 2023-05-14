@@ -6,14 +6,14 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 import { useSocket } from '../../hooks';
-import { RemoveProps } from '../../types';
+import { RemoveProps, RootState, SocketApiType } from '../../types';
 
 const Remove = (props: RemoveProps) => {
   const { t } = useTranslation();
-  const { removeChannel } = useSocket();
+  const { removeChannel } = useSocket() as SocketApiType;
   const [loading, setLoading] = useState(false);
   const { handleClose } = props;
-  const id = useSelector((state) => state.modal.info);
+  const id = useSelector((state: RootState) => state.modal.info);
   const rollbar = useRollbar();
 
   const handleSubmit = async () => {
@@ -25,11 +25,10 @@ const Remove = (props: RemoveProps) => {
       toast.success(t('channels.removed') as string); // FIXME: ?
     } catch (error) {
       console.log(error);
+      setLoading(false);
+
       // FIXME: ?
-      if (error instanceof Error) {
-        setLoading(false);
-        rollbar.error('channel renaming', error, id);
-      }
+      rollbar.error('channel renaming', error, id);
     }
   };
 

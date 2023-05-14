@@ -10,13 +10,13 @@ import { toast } from 'react-toastify';
 import { useSocket } from '../../hooks';
 import { getChannelsNames } from '../../selectors';
 import { setCurrentChannel } from '../../slices/channelsSlice';
-import { AddProps } from '../../types';
+import { AddProps, SocketApiType } from '../../types';
 import validationSchema from './validationSchema';
 
 const Add = (props: AddProps) => {
   const { t } = useTranslation();
   const { handleClose } = props;
-  const { addChannel } = useSocket();
+  const { addChannel } = useSocket() as SocketApiType;
   const channelsNames = useSelector(getChannelsNames);
   const rollbar = useRollbar();
   const dispatch = useDispatch();
@@ -46,11 +46,10 @@ const Add = (props: AddProps) => {
         handleClose();
       } catch (error) {
         console.log(error);
+        formik.setSubmitting(false);
+
         // FIXME: ?
-        if (error instanceof Error) {
-          rollbar.error('channel adding', error, name);
-          formik.setSubmitting(false);
-        }
+        rollbar.error('channel adding', error, name);
       }
     },
   });

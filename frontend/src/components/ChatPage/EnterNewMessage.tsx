@@ -18,9 +18,7 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
-  const {
-    user: { username },
-  } = useAuth();
+  const auth = useAuth() as AuthType;
   const { sendMessage } = useSocket();
 
   useEffect(() => {
@@ -35,16 +33,18 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
       const message = {
         body: filteredBody,
         channelId,
-        username,
+        username: auth.user?.username,
       };
 
       try {
         await sendMessage(message);
         formik.resetForm();
       } catch (error) {
-        formik.setSubmitting(false);
-        rollbar.error('sending new message', error as Error, body); // FIXME: ?
         console.log(error);
+        formik.setSubmitting(false);
+
+        // FIXME: ?
+        rollbar.error('sending new message', error, body);
       }
     },
   });

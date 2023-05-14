@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { useAuth } from '../hooks';
 import routes from '../routes';
+import { AuthType } from '../types';
 
 const LangSwitcher = () => {
   const { i18n, t } = useTranslation();
@@ -55,7 +56,7 @@ const LangSwitcher = () => {
 };
 
 const AuthButton = () => {
-  const auth = useAuth();
+  const auth = useAuth() as AuthType; // FIXME: ?
   const { t } = useTranslation();
 
   return (

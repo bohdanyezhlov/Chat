@@ -1,5 +1,5 @@
 import { useRollbar } from '@rollbar/react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 import signupImage from '../assets/signupImage.jpg';
 import { useAuth } from '../hooks';
 import routes from '../routes';
+import { AuthType } from '../types';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string()
@@ -29,14 +30,14 @@ const validationSchema = Yup.object().shape({
 
 const Signup = () => {
   const rollbar = useRollbar();
-  const auth = useAuth();
+  const auth = useAuth() as AuthType;
   const [signupFailed, setSignupFailed] = useState(false);
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, []);
 
   const formik = useFormik({
@@ -53,16 +54,18 @@ const Signup = () => {
         console.log(error);
         rollbar.error(t('errors.unknown'), error, values);
 
-        if (!error.isAxiosError) {
-          toast.error(t('errors.unknown'));
+        // FIXME: ?
+        if (!(error as AxiosError).isAxiosError) {
+          toast.error(t('errors.unknown') as string); // FIXME: ?
           return;
         }
 
-        if (error.response.status === 409) {
+        // FIXME: ?
+        if ((error as AxiosError).response?.status === 409) {
           setSignupFailed(true);
-          inputRef.current.select();
+          inputRef.current?.select();
         } else {
-          toast.error(t('errors.network'));
+          toast.error(t('errors.network') as string); // FIXME: ?
         }
       }
     },
