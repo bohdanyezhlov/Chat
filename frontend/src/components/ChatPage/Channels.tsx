@@ -16,7 +16,29 @@ import {
   setCurrentChannel,
 } from '../../slices/channelsSlice';
 import { openModal } from '../../slices/modalSlice';
-import { ChannelProps, Channel as ChannelType, RootState } from '../../types';
+import {
+  ChannelProps,
+  Channel as ChannelType,
+  CustomButtonProps,
+  RootState,
+} from '../../types';
+
+const CustomButton = (props: CustomButtonProps) => {
+  const { handleSetCurrentChannel, channel, variant } = props;
+  const buttonClass = 'w-100 rounded text-start text-truncate';
+
+  return (
+    <Button
+      onClick={handleSetCurrentChannel(channel.id)}
+      type="button"
+      variant={variant}
+      className={buttonClass}
+    >
+      <span className="me-1">#</span>
+      {channel.name}
+    </Button>
+  );
+};
 
 const Channel = (props: ChannelProps) => {
   const {
@@ -28,21 +50,16 @@ const Channel = (props: ChannelProps) => {
   } = props;
   const { t } = useTranslation();
   const variant = isActive ? 'primary' : '';
-  const buttonClass = 'w-100 rounded text-start text-truncate';
 
   return (
     <li className="nav-item w-100">
       {channel.removable ? (
         <Dropdown as={ButtonGroup} className="d-flex">
-          <Button
-            onClick={handleSetCurrentChannel(channel.id)}
-            type="button"
+          <CustomButton
+            handleSetCurrentChannel={handleSetCurrentChannel}
+            channel={channel}
             variant={variant}
-            className={buttonClass}
-          >
-            <span className="me-1">#</span>
-            {channel.name}
-          </Button>
+          />
           <Dropdown.Toggle
             split
             className="flex-grow-0 position-absolute end-0"
@@ -61,15 +78,11 @@ const Channel = (props: ChannelProps) => {
           </Dropdown.Menu>
         </Dropdown>
       ) : (
-        <Button
-          onClick={handleSetCurrentChannel(channel.id)}
-          type="button"
+        <CustomButton
+          handleSetCurrentChannel={handleSetCurrentChannel}
+          channel={channel}
           variant={variant}
-          className={buttonClass}
-        >
-          <span className="me-1">#</span>
-          {channel.name}
-        </Button>
+        />
       )}
     </li>
   );

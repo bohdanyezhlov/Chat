@@ -119,3 +119,9 @@ export type SocketEventData =
 export interface AddChannelResponse extends SocketResponseType {
   data: Channel;
 }
+
+export type CustomButtonProps = {
+  handleSetCurrentChannel: (id: number) => () => void;
+  channel: Channel;
+  variant: string;
+};
