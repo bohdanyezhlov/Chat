@@ -106,8 +106,8 @@ export interface RenameChannelData {
 export interface SocketApiType {
   addChannel: (data: AddChannelData) => AddChannelResponse;
   removeChannel: (data: RemoveChannelData) => SocketResponseType;
-  renameChannel: (data: RenameChannelData) => void;
-  sendMessage: (data: SendMessageData) => void;
+  renameChannel: (data: RenameChannelData) => SocketResponseType;
+  sendMessage: (data: SendMessageData) => SocketResponseType;
 }
 
 export type SocketEventData =

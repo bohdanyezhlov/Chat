@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 
 import { useAuth, useSocket } from '../../hooks';
-import { AuthType, EnterNewMessageProps } from '../../types';
+import { AuthType, EnterNewMessageProps, SocketApiType } from '../../types';
 
 const validationSchema = Yup.object().shape({
   body: Yup.string().trim().required('required'),
@@ -19,7 +19,7 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
   const auth = useAuth() as AuthType;
-  const { sendMessage } = useSocket();
+  const { sendMessage } = useSocket() as SocketApiType;
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -33,7 +33,7 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
       const message = {
         body: filteredBody,
         channelId,
-        username: auth.user?.username,
+        username: auth.user?.username || '', // FIXME: ?
       };
 
       try {
