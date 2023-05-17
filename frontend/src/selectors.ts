@@ -26,7 +26,7 @@ export const getChannelsNames = (state: RootState) => {
 
 export const getCurrentChannelName =
   (currentId: number | null) => (state: RootState) => {
-    if (!currentId) return null;
+    if (!currentId) return ''; // FIXME: ?
 
     const { channels } = state.channels;
     const [currentChannel] = channels.filter((c) => c.id === currentId);

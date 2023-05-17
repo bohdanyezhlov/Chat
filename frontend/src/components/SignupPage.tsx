@@ -24,7 +24,7 @@ const validationSchema = object().shape({
     .trim(),
   confirmPassword: string()
     .required('signup.required')
-    .oneOf([ref('password'), null], 'signup.mustMatch'),
+    .oneOf([ref('password')], 'signup.mustMatch'),
 });
 
 const Signup = () => {
@@ -99,7 +99,7 @@ const Signup = () => {
                     required
                     isInvalid={
                       signupFailed ||
-                      (formik.touched.username && formik.errors.username)
+                      (formik.touched.username && !!formik.errors.username)
                     }
                   />
                   <Form.Label>{t('signup.username')}</Form.Label>
@@ -125,7 +125,7 @@ const Signup = () => {
                     required
                     isInvalid={
                       signupFailed ||
-                      (formik.touched.password && formik.errors.password)
+                      (formik.touched.password && !!formik.errors.password)
                     }
                   />
                   <Form.Label>{t('signup.password')}</Form.Label>
@@ -152,14 +152,14 @@ const Signup = () => {
                     isInvalid={
                       signupFailed ||
                       (formik.touched.confirmPassword &&
-                        formik.errors.confirmPassword)
+                        !!formik.errors.confirmPassword)
                     }
                   />
                   <Form.Label>{t('signup.confirm')}</Form.Label>
                   <div className="invalid-tooltip">
                     {signupFailed
                       ? t('signup.alreadyExists')
-                      : t(formik.errors.confirmPassword)}
+                      : t(formik.errors.confirmPassword || '')}
                   </div>
                 </Form.Group>
 

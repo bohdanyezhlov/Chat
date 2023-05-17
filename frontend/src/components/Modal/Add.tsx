@@ -66,12 +66,14 @@ const Add = (props: AddProps) => {
               onBlur={formik.handleBlur}
               value={formik.values.name}
               name="name"
-              isInvalid={formik.errors.name && formik.touched.name}
+              isInvalid={!!formik.errors.name && formik.touched.name}
             />
             <Form.Label className="visually-hidden" htmlFor="name">
               {t('modals.channelName')}
             </Form.Label>
-            <div className="invalid-feedback">{t(formik.errors.name)}</div>
+            <div className="invalid-feedback">
+              {t(formik.errors.name || '')}
+            </div>
           </FormGroup>
           <div className="d-flex justify-content-end">
             <Button

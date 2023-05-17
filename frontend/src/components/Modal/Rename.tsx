@@ -31,7 +31,7 @@ const Rename = (props: RenameProps) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async ({ name }) => {
-      const filteredName = name ? leoProfanity.clean(name) : ''; // FIXME: ?
+      const filteredName = leoProfanity.clean(name);
       const newChannelName = {
         id,
         name: filteredName,
@@ -65,9 +65,9 @@ const Rename = (props: RenameProps) => {
               ref={inputRef}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.name}
+              value={formik.values.name || ''}
               name="name"
-              isInvalid={formik.errors.name && formik.touched.name}
+              isInvalid={!!formik.errors.name && formik.touched.name}
             />
             <Form.Label className="visually-hidden" htmlFor="name">
               {t('modals.channelName')}
