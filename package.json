@@ -10,6 +10,7 @@
     "@hexlet/chat-server": "^1.1.6"
   },
   "devDependencies": {
+    "husky": "^8.0.3",
     "tap": "^16.1.0"
   },
   "scripts": {
@@ -17,7 +18,8 @@
     "start": "start-server -s ./frontend/build",
     "dev": "fastify start -w -l info -P app.js",
     "postinstall": "npm ci --prefix frontend",
-    "build": "npm run build --prefix frontend"
+    "build": "npm run build --prefix frontend",
+    "prepare": "cd .. && husky install frontend/.husky"
   },
   "repository": {
     "type": "git",
