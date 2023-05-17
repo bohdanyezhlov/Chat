@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
 import eslint from 'vite-plugin-eslint';
@@ -20,5 +21,11 @@ export default ({ mode }) => {
       outDir: 'build',
     },
     plugins: [react(), eslint()],
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      watch: false,
+      setupFiles: ['./src/setupTests.ts'],
+    },
   });
 };
