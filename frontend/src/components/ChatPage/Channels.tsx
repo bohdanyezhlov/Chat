@@ -25,7 +25,7 @@ import {
 
 const CustomButton = (props: CustomButtonProps) => {
   const { handleSetCurrentChannel, channel, variant } = props;
-  const buttonClass = 'w-100 rounded text-start text-truncate';
+  const buttonClass = 'w-100 rounded-start text-start text-truncate';
 
   return (
     <Button
@@ -62,7 +62,7 @@ const Channel = (props: ChannelProps) => {
           />
           <Dropdown.Toggle
             split
-            className="flex-grow-0 position-absolute end-0"
+            className="flex-grow-0"
             variant={variant}
             style={{ zIndex: 1 }}
           >
@@ -145,7 +145,7 @@ const Channels = () => {
           </Button>
         </OverlayTrigger>
       </div>
-      <ul className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
+      <ul className="nav flex-column nav-pills nav-fill px-2">
         <div ref={defaultChannelRef} />
         {channels.map((channel: ChannelType) => {
           const isActive = channel.id === currentChannelId;
