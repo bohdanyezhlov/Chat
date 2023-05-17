@@ -7,26 +7,26 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { LogArgument } from 'rollbar';
-import * as Yup from 'yup';
+import { object, ref, string } from 'yup';
 
 import signupImage from '../assets/signupImage.jpg';
 import { useAuth } from '../hooks';
 import routes from '../routes';
 import { AuthType } from '../types';
 
-const validationSchema = Yup.object().shape({
-  username: Yup.string()
+const validationSchema = object().shape({
+  username: string()
     .required('signup.required')
     .min(3, 'signup.usernameConstraints')
     .max(20, 'signup.usernameConstraints')
     .trim(),
-  password: Yup.string()
+  password: string()
     .required('signup.required')
     .min(6, 'signup.passMin')
     .trim(),
-  confirmPassword: Yup.string()
+  confirmPassword: string()
     .required('signup.required')
-    .oneOf([Yup.ref('password'), null], 'signup.mustMatch'),
+    .oneOf([ref('password'), null], 'signup.mustMatch'),
 });
 
 const Signup = () => {

@@ -6,13 +6,13 @@ import { Button, Form, InputGroup } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { LogArgument } from 'rollbar';
-import * as Yup from 'yup';
+import { object, string } from 'yup';
 
 import { useAuth, useSocket } from '../../hooks';
 import { AuthType, EnterNewMessageProps, SocketApiType } from '../../types';
 
-const validationSchema = Yup.object().shape({
-  body: Yup.string().trim().required('required'),
+const validationSchema = object().shape({
+  body: string().trim().required('required'),
 });
 
 const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
