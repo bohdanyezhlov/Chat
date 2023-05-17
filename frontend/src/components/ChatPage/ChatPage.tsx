@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { LogArgument } from 'rollbar';
 
 import { useAuth } from '../../hooks';
 import routes from '../../routes';
@@ -33,9 +34,7 @@ const ChatPage = () => {
         setIsLoading(false);
       } catch (error) {
         console.log(error);
-
-        // FIXME: ?
-        rollbar.error('getting init data', error);
+        rollbar.error('getting init data', error as LogArgument);
 
         if (!(error as AxiosError).isAxiosError) {
           toast.error(t('errors.unknown') as string);

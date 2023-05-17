@@ -6,6 +6,7 @@ import { Button, Form, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { LogArgument } from 'rollbar';
 
 import { useSocket } from '../../hooks';
 import { getChannelsNames, getCurrentChannelName } from '../../selectors';
@@ -47,9 +48,7 @@ const Rename = (props: RenameProps) => {
       } catch (error) {
         console.log(error);
         formik.setSubmitting(false);
-
-        // FIXME: ?
-        rollbar.error('channel renaming', error, name);
+        rollbar.error('channel renaming', error as LogArgument, name);
       }
     },
   });

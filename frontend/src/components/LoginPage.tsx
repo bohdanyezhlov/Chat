@@ -6,6 +6,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { LogArgument } from 'rollbar';
 
 import loginImage from '../assets/loginImage.jpg';
 import { useAuth } from '../hooks';
@@ -39,7 +40,7 @@ const Login = () => {
         navigate(from);
       } catch (error) {
         console.log(error);
-        rollbar.error(t('errors.unknown'), error, values); // FIXME: ?
+        rollbar.error(t('errors.unknown'), error as LogArgument, values);
 
         // FIXME: ?
         if (!(error as AxiosError).isAxiosError) {

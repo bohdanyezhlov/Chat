@@ -4,6 +4,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { LogArgument } from 'rollbar';
 
 import { useSocket } from '../../hooks';
 import { RemoveProps, RootState, SocketApiType } from '../../types';
@@ -26,9 +27,7 @@ const Remove = (props: RemoveProps) => {
     } catch (error) {
       console.log(error);
       setLoading(false);
-
-      // FIXME: ?
-      rollbar.error('channel renaming', error, id);
+      rollbar.error('channel renaming', error as LogArgument, id);
     }
   };
 

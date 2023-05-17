@@ -6,6 +6,7 @@ import { Button, Form, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { LogArgument } from 'rollbar';
 
 import { useSocket } from '../../hooks';
 import { getChannelsNames } from '../../selectors';
@@ -47,9 +48,7 @@ const Add = (props: AddProps) => {
       } catch (error) {
         console.log(error);
         formik.setSubmitting(false);
-
-        // FIXME: ?
-        rollbar.error('channel adding', error, name);
+        rollbar.error('channel adding', error as LogArgument, name);
       }
     },
   });

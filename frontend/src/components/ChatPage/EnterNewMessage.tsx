@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
+import { LogArgument } from 'rollbar';
 import * as Yup from 'yup';
 
 import { useAuth, useSocket } from '../../hooks';
@@ -42,9 +43,7 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
       } catch (error) {
         console.log(error);
         formik.setSubmitting(false);
-
-        // FIXME: ?
-        rollbar.error('sending new message', error, body);
+        rollbar.error('sending new message', error as LogArgument, body);
       }
     },
   });

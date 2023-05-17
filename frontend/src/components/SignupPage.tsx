@@ -6,6 +6,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { LogArgument } from 'rollbar';
 import * as Yup from 'yup';
 
 import signupImage from '../assets/signupImage.jpg';
@@ -52,7 +53,7 @@ const Signup = () => {
         navigate(routes.chatPagePath());
       } catch (error) {
         console.log(error);
-        rollbar.error(t('errors.unknown'), error, values);
+        rollbar.error(t('errors.unknown'), error as LogArgument, values);
 
         // FIXME: ?
         if (!(error as AxiosError).isAxiosError) {
