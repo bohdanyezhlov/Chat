@@ -125,3 +125,7 @@ export type CustomButtonProps = {
   channel: Channel;
   variant: string;
 };
+
+export interface ModalTypes {
+  [key: string]: React.ComponentType<AddProps | RemoveProps | RenameProps>;
+}
