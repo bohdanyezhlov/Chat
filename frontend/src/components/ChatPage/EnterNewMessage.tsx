@@ -1,11 +1,9 @@
-import { useRollbar } from '@rollbar/react';
 import { useFormik } from 'formik';
 import leoProfanity from 'leo-profanity';
 import { useEffect, useRef } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { LogArgument } from 'rollbar';
 import { object, string } from 'yup';
 
 import { useAuth, useSocket } from '../../hooks';
@@ -16,7 +14,6 @@ const validationSchema = object().shape({
 });
 
 const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
-  const rollbar = useRollbar();
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
   const auth = useAuth() as AuthType;
@@ -43,7 +40,6 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
       } catch (error) {
         console.log(error);
         formik.setSubmitting(false);
-        rollbar.error('sending new message', error as LogArgument, body);
       }
     },
   });

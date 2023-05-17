@@ -1,4 +1,3 @@
-import { useRollbar } from '@rollbar/react';
 import { useFormik } from 'formik';
 import leoProfanity from 'leo-profanity';
 import { useEffect, useRef } from 'react';
@@ -6,7 +5,6 @@ import { Button, Form, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { LogArgument } from 'rollbar';
 
 import { useSocket } from '../../hooks';
 import { getChannelsNames } from '../../selectors';
@@ -19,7 +17,6 @@ const Add = (props: AddProps) => {
   const { handleClose } = props;
   const { addChannel } = useSocket() as SocketApiType;
   const channelsNames = useSelector(getChannelsNames);
-  const rollbar = useRollbar();
   const dispatch = useDispatch();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +45,6 @@ const Add = (props: AddProps) => {
       } catch (error) {
         console.log(error);
         formik.setSubmitting(false);
-        rollbar.error('channel adding', error as LogArgument, name);
       }
     },
   });

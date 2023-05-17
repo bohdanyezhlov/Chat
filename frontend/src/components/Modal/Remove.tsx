@@ -1,10 +1,8 @@
-import { useRollbar } from '@rollbar/react';
 import { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { LogArgument } from 'rollbar';
 
 import { useSocket } from '../../hooks';
 import { RemoveProps, RootState, SocketApiType } from '../../types';
@@ -15,7 +13,6 @@ const Remove = (props: RemoveProps) => {
   const [loading, setLoading] = useState(false);
   const { handleClose } = props;
   const id = useSelector((state: RootState) => state.modal.info);
-  const rollbar = useRollbar();
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -27,7 +24,6 @@ const Remove = (props: RemoveProps) => {
     } catch (error) {
       console.log(error);
       setLoading(false);
-      rollbar.error('channel renaming', error as LogArgument, id);
     }
   };
 

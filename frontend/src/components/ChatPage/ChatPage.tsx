@@ -1,11 +1,9 @@
-import { useRollbar } from '@rollbar/react';
 import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { LogArgument } from 'rollbar';
 
 import { useAuth } from '../../hooks';
 import routes from '../../routes';
@@ -17,7 +15,6 @@ import Messages from './Messages';
 
 const ChatPage = () => {
   const { t } = useTranslation();
-  const rollbar = useRollbar();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { getAuthHeader } = useAuth() as AuthType;
@@ -34,7 +31,6 @@ const ChatPage = () => {
         setIsLoading(false);
       } catch (error) {
         console.log(error);
-        rollbar.error('getting init data', error as LogArgument);
 
         if (!(error as AxiosError).isAxiosError) {
           toast.error(t('errors.unknown') as string);
@@ -50,7 +46,7 @@ const ChatPage = () => {
     };
 
     fetchData();
-  }, [getAuthHeader, dispatch, navigate, rollbar, t]);
+  }, [getAuthHeader, dispatch, navigate, t]);
 
   return isLoading ? (
     <Loading />

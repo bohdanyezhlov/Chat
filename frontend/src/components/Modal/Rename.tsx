@@ -1,4 +1,3 @@
-import { useRollbar } from '@rollbar/react';
 import { useFormik } from 'formik';
 import leoProfanity from 'leo-profanity';
 import { useEffect, useRef } from 'react';
@@ -6,7 +5,6 @@ import { Button, Form, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { LogArgument } from 'rollbar';
 
 import { useSocket } from '../../hooks';
 import { getChannelsNames, getCurrentChannelName } from '../../selectors';
@@ -20,7 +18,6 @@ const Rename = (props: RenameProps) => {
   const currentChannelName = useSelector(getCurrentChannelName(id));
   const { t } = useTranslation();
   const { renameChannel } = useSocket() as SocketApiType;
-  const rollbar = useRollbar();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -48,7 +45,6 @@ const Rename = (props: RenameProps) => {
       } catch (error) {
         console.log(error);
         formik.setSubmitting(false);
-        rollbar.error('channel renaming', error as LogArgument, name);
       }
     },
   });

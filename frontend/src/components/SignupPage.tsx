@@ -1,4 +1,3 @@
-import { useRollbar } from '@rollbar/react';
 import axios, { AxiosError } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from 'react';
@@ -6,7 +5,6 @@ import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { LogArgument } from 'rollbar';
 import { object, ref, string } from 'yup';
 
 import signupImage from '../assets/signupImage.jpg';
@@ -30,7 +28,6 @@ const validationSchema = object().shape({
 });
 
 const Signup = () => {
-  const rollbar = useRollbar();
   const auth = useAuth() as AuthType;
   const [signupFailed, setSignupFailed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,7 +50,6 @@ const Signup = () => {
         navigate(routes.chatPagePath());
       } catch (error) {
         console.log(error);
-        rollbar.error(t('errors.unknown'), error as LogArgument, values);
 
         // FIXME: ?
         if (!(error as AxiosError).isAxiosError) {

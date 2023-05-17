@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 
 import LoginPage from './LoginPage';
 
-vi.mock('@rollbar/react');
 vi.mock('axios');
 
 describe('LoginPage component', () => {

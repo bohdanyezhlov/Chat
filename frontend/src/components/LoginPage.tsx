@@ -1,4 +1,3 @@
-import { useRollbar } from '@rollbar/react';
 import axios, { AxiosError } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from 'react';
@@ -6,7 +5,6 @@ import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { LogArgument } from 'rollbar';
 
 import loginImage from '../assets/loginImage.jpg';
 import { useAuth } from '../hooks';
@@ -14,7 +12,6 @@ import routes from '../routes';
 import { AuthType } from '../types';
 
 const Login = () => {
-  const rollbar = useRollbar();
   const auth = useAuth() as AuthType;
   const [authFailed, setAuthFailed] = useState(false);
   const location = useLocation();
@@ -40,7 +37,6 @@ const Login = () => {
         navigate(from);
       } catch (error) {
         console.log(error);
-        rollbar.error(t('errors.unknown'), error as LogArgument, values);
 
         // FIXME: ?
         if (!(error as AxiosError).isAxiosError) {

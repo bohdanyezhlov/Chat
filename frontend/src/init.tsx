@@ -1,5 +1,4 @@
 import { Store, configureStore } from '@reduxjs/toolkit';
-import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react';
 import i18next from 'i18next';
 import detector from 'i18next-browser-languagedetector';
 import leoProfanity from 'leo-profanity';
@@ -77,8 +76,6 @@ const socketInit = (store: Store) => {
 };
 
 const init = async () => {
-  const isProduction = process.env.NODE_ENV === 'production';
-
   const i18n = i18next.createInstance();
 
   await i18n.use(detector).use(initReactI18next).init({
@@ -99,23 +96,14 @@ const init = async () => {
 
   const socketApi = socketInit(store);
 
-  const rollbarConfig = {
-    enabled: isProduction,
-    accessToken: import.meta.env.ROLLBAR_TOKEN,
-  };
-
   return (
-    <RollbarProvider config={rollbarConfig}>
-      <ErrorBoundary>
-        <I18nextProvider i18n={i18n}>
-          <Provider store={store}>
-            <SocketContext.Provider value={socketApi}>
-              <App />
-            </SocketContext.Provider>
-          </Provider>
-        </I18nextProvider>
-      </ErrorBoundary>
-    </RollbarProvider>
+    <I18nextProvider i18n={i18n}>
+      <Provider store={store}>
+        <SocketContext.Provider value={socketApi}>
+          <App />
+        </SocketContext.Provider>
+      </Provider>
+    </I18nextProvider>
   );
 };
 
