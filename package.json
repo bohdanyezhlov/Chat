@@ -19,7 +19,7 @@
     "dev": "fastify start -w -l info -P app.js",
     "postinstall": "npm ci --prefix frontend",
     "build": "npm run build --prefix frontend",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
