@@ -6,7 +6,7 @@
 ## Description:
 SPA Chat is a simple messaging application built using React, Redux Toolkit, Formik, i18next, Axios, and Websockets. It includes features such as user registration and authorization, channel management (adding, renaming, and removing channels), push notifications, and filtering of profanity. Users can easily communicate with each other through different channels while ensuring a safe and respectful conversation environment.
 
-## Development
+## Development:
 - Install dependencies: `make install`
 - Start local server: `make start`
 - Lint code: `make lint-frontend`
