@@ -28,11 +28,19 @@ const ThemeSwitcher = () => {
   }, [bodyClass]);
 
   useEffect(() => {
-    const defaultTheme = localStorage.getItem('theme');
-    if (defaultTheme) {
-      const parsedTheme = JSON.parse(defaultTheme);
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+      const parsedTheme = JSON.parse(storedTheme);
       dispatch(setTheme(parsedTheme));
       setBodyClass(parsedTheme);
+    } else {
+      const userPrefersDark =
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const defaultTheme = userPrefersDark ? 'dark' : 'light';
+      dispatch(setTheme(defaultTheme));
+      setBodyClass(defaultTheme);
+      localStorage.setItem('theme', JSON.stringify(defaultTheme));
     }
   }, [dispatch]);
 
