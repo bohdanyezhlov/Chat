@@ -13,5 +13,5 @@ jobs:
         with:
           node-version: '16.x'
       - run: make install
-      - run: make lint-frontend
-      - run: make test-frontend
+      - run: make lint
+      - run: make test
