@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 import { useSocket } from '../../hooks';
 import { getChannelsNames } from '../../selectors';
 import { setCurrentChannel } from '../../slices/channelsSlice';
-import { AddProps, SocketApiType } from '../../types';
+import { AddProps, RootState, SocketApiType } from '../../types';
 import validationSchema from './validationSchema';
 
 const Add = (props: AddProps) => {
@@ -18,7 +18,9 @@ const Add = (props: AddProps) => {
   const { addChannel } = useSocket() as SocketApiType;
   const channelsNames = useSelector(getChannelsNames);
   const dispatch = useDispatch();
-
+  const currentTheme = useSelector(
+    (state: RootState) => state.theme.currentTheme
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -51,11 +53,15 @@ const Add = (props: AddProps) => {
 
   return (
     <>
-      <Modal.Header closeButton onHide={handleClose}>
+      <Modal.Header
+        closeButton
+        onHide={handleClose}
+        className={`bg-${currentTheme}`}
+      >
         <Modal.Title>{t('modals.add')}</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
+      <Modal.Body className={`bg-${currentTheme}`}>
         <form onSubmit={formik.handleSubmit}>
           <FormGroup>
             <FormControl

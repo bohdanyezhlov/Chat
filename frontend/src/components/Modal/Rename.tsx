@@ -18,7 +18,9 @@ const Rename = (props: RenameProps) => {
   const currentChannelName = useSelector(getCurrentChannelName(id));
   const { t } = useTranslation();
   const { renameChannel } = useSocket() as SocketApiType;
-
+  const currentTheme = useSelector(
+    (state: RootState) => state.theme.currentTheme
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -51,11 +53,15 @@ const Rename = (props: RenameProps) => {
 
   return (
     <>
-      <Modal.Header closeButton onHide={handleClose}>
+      <Modal.Header
+        closeButton
+        onHide={handleClose}
+        className={`bg-${currentTheme}`}
+      >
         <Modal.Title>{t('modals.rename')}</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
+      <Modal.Body className={`bg-${currentTheme}`}>
         <form onSubmit={formik.handleSubmit}>
           <FormGroup>
             <FormControl

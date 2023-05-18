@@ -63,6 +63,12 @@ export interface UserData {
   token: string;
 }
 
+export type Theme = 'light' | 'dark';
+
+export interface ThemeState {
+  currentTheme: Theme;
+}
+
 export interface MessagesState {
   messages: Message[];
 }
@@ -82,6 +88,7 @@ export type RootState = CombinedState<{
   channels: ChannelsState;
   messages: MessagesState;
   modal: ModalState;
+  theme: ThemeState;
 }>;
 
 export interface SendMessageData {

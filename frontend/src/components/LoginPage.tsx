@@ -1,15 +1,17 @@
 import axios, { AxiosError } from 'axios';
+import cn from 'classnames';
 import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import loginImage from '../assets/loginImage.jpg';
 import { useAuth } from '../hooks';
 import routes from '../routes';
-import { AuthType } from '../types';
+import { AuthType, RootState } from '../types';
 
 const Login = () => {
   const auth = useAuth() as AuthType;
@@ -18,6 +20,9 @@ const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
+  const currentTheme = useSelector(
+    (state: RootState) => state.theme.currentTheme
+  );
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -38,12 +43,11 @@ const Login = () => {
       } catch (error) {
         console.log(error);
 
-        // FIXME: ?
         if (!(error as AxiosError).isAxiosError) {
           toast.error(t('errors.unknown') as string); // FIXME: ?
           return;
         }
-        // FIXME: ?
+
         if ((error as AxiosError).response?.status === 401) {
           setAuthFailed(true);
           inputRef.current?.select();
@@ -54,11 +58,16 @@ const Login = () => {
     },
   });
 
+  const cardClass = cn('card shadow-sm', {
+    'bg-light': currentTheme === 'light',
+    'bg-dark': currentTheme === 'dark',
+  });
+
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
         <div className="col-12 col-md-8 col-xxl-6">
-          <div className="card shadow-sm">
+          <div className={cardClass}>
             <div className="card-body row p-5">
               <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
                 <img
@@ -89,7 +98,9 @@ const Login = () => {
                     required
                     isInvalid={authFailed}
                   />
-                  <Form.Label>{t('login.username')}</Form.Label>
+                  <Form.Label className="text-dark">
+                    {t('login.username')}
+                  </Form.Label>
                 </Form.Group>
 
                 <Form.Group
@@ -107,7 +118,9 @@ const Login = () => {
                     required
                     isInvalid={authFailed}
                   />
-                  <Form.Label>{t('login.password')}</Form.Label>
+                  <Form.Label className="text-dark">
+                    {t('login.password')}
+                  </Form.Label>
                   {authFailed && (
                     <div className="invalid-tooltip">
                       {t('login.authFailed')}

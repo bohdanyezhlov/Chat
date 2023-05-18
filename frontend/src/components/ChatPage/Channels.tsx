@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { useEffect, useRef } from 'react';
 import {
   Button,
@@ -25,14 +26,21 @@ import {
 
 const CustomButton = (props: CustomButtonProps) => {
   const { handleSetCurrentChannel, channel, variant } = props;
-  const buttonClass = 'w-100 rounded-start text-start text-truncate';
+  const currentTheme = useSelector(
+    (state: RootState) => state.theme.currentTheme
+  );
+
+  const btnClass = cn('w-100', 'rounded-start', 'text-start', 'text-truncate', {
+    'text-white': currentTheme === 'dark',
+    'text-dark': currentTheme === 'light',
+  });
 
   return (
     <Button
       onClick={handleSetCurrentChannel(channel.id)}
       type="button"
       variant={variant}
-      className={buttonClass}
+      className={btnClass}
     >
       <span className="me-1">#</span>
       {channel.name}

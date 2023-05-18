@@ -13,6 +13,9 @@ const Remove = (props: RemoveProps) => {
   const [loading, setLoading] = useState(false);
   const { handleClose } = props;
   const id = useSelector((state: RootState) => state.modal.info);
+  const currentTheme = useSelector(
+    (state: RootState) => state.theme.currentTheme
+  );
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -29,11 +32,15 @@ const Remove = (props: RemoveProps) => {
 
   return (
     <>
-      <Modal.Header closeButton onHide={handleClose}>
+      <Modal.Header
+        closeButton
+        onHide={handleClose}
+        className={`bg-${currentTheme}`}
+      >
         <Modal.Title>{t('modals.remove')}</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
+      <Modal.Body className={`bg-${currentTheme}`}>
         <p className="lead">{t('modals.confirmation')}</p>
         <div className="d-flex justify-content-end">
           <Button className="me-2 btn-secondary" onClick={handleClose}>

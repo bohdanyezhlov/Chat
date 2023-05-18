@@ -1,4 +1,5 @@
 import { Suspense, lazy, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Navigate,
   Route,
@@ -11,7 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import { AuthContext } from '../contexts';
 import { useAuth } from '../hooks';
 import routes from '../routes';
-import { AuthType, ChildrenProps, UserData } from '../types';
+import { AuthType, ChildrenProps, RootState, UserData } from '../types';
 import Loading from './Loading';
 import LoginPage from './LoginPage';
 import Modal from './Modal/Modal';
@@ -72,31 +73,36 @@ const PrivateRoute = ({ children }: ChildrenProps) => {
   );
 };
 
-const App = () => (
-  <AuthProvider>
-    <Router>
-      <div className="d-flex flex-column h-100">
-        <Navbar />
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            <Route
-              path={routes.chatPagePath()}
-              element={
-                <PrivateRoute>
-                  <ChatPage />
-                </PrivateRoute>
-              }
-            />
-            <Route path="*" element={<NotFoundPage />} />
-            <Route path={routes.signupPagePath()} element={<SignupPage />} />
-            <Route path={routes.loginPagePath()} element={<LoginPage />} />
-          </Routes>
-        </Suspense>
-        <ToastContainer />
-        <Modal />
-      </div>
-    </Router>
-  </AuthProvider>
-);
+const App = () => {
+  const currentTheme = useSelector(
+    (state: RootState) => state.theme.currentTheme
+  );
 
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="d-flex flex-column h-100">
+          <Navbar />
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              <Route
+                path={routes.chatPagePath()}
+                element={
+                  <PrivateRoute>
+                    <ChatPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="*" element={<NotFoundPage />} />
+              <Route path={routes.signupPagePath()} element={<SignupPage />} />
+              <Route path={routes.loginPagePath()} element={<LoginPage />} />
+            </Routes>
+          </Suspense>
+          <ToastContainer theme={currentTheme} />
+          <Modal />
+        </div>
+      </Router>
+    </AuthProvider>
+  );
+};
 export default App;
