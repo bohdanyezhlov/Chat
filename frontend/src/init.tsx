@@ -75,6 +75,10 @@ const socketInit = (store: Store) => {
   return socketApi;
 };
 
+export const store = configureStore({
+  reducer,
+});
+
 const init = async () => {
   const i18n = i18next.createInstance();
 
@@ -89,10 +93,6 @@ const init = async () => {
   leoProfanity.add(leoProfanity.getDictionary('fr'));
   // @ts-expect-error: Unreachable code error
   leoProfanity.add(leoProfanity.getDictionary('ru'));
-
-  const store = configureStore({
-    reducer,
-  });
 
   const socketApi = socketInit(store);
 

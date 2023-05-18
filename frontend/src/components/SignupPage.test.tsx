@@ -1,15 +1,19 @@
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 
+import { store } from '../init';
 import SignupPage from './SignupPage';
 
 describe('SignupPage', () => {
   it('renders signup form with input fields', () => {
     render(
-      <MemoryRouter>
-        <SignupPage />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <SignupPage />
+        </MemoryRouter>
+      </Provider>
     );
 
     const usernameInput = screen.getByLabelText('signup.username');
