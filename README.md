@@ -9,8 +9,8 @@ SPA Chat is a simple messaging application built using React, Redux Toolkit, For
 ## Development:
 - Install dependencies: `make install`
 - Start local server: `make start`
-- Lint code: `make lint-frontend`
-- Test code: `make test-frontend`
+- Lint code: `make lint`
+- Test code: `make test`
 
 ## Demo:
 https://bohdanyezhlov.up.railway.app/
