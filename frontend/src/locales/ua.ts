@@ -49,6 +49,8 @@ export default {
       messageCount_many: 'повідомлень',
       newMessage: 'Нове повідомлення',
       enterNewMessage: 'Введіть нове повідомлення...',
+      messageTooLong:
+        'Повідомлення занадто довге. Максимальний ліміт: 100 символів',
     },
     signup: {
       required: "Обов'язкове поле",

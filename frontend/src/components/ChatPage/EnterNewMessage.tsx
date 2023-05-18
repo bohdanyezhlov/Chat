@@ -17,7 +17,7 @@ import {
 } from '../../types';
 
 const validationSchema = object().shape({
-  body: string().trim().required('required'),
+  body: string().trim().required('required').max(100, 'chat.messageTooLong'),
 });
 
 const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
@@ -53,12 +53,17 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
       }
     },
   });
-
+  console.log(
+    formik.errors.body === t('chat.messageTooLong'),
+    formik.errors.body,
+    t('chat.messageTooLong')
+  );
   const inputClass = cn('border-0 p-0 ps-2', {
     'text-white': currentTheme === 'dark',
     'text-dark': currentTheme === 'light',
     'bg-dark': currentTheme === 'dark',
     'bg-light': currentTheme === 'light',
+    'is-invalid': formik.errors.body === 'chat.messageTooLong',
   });
 
   return (
@@ -76,6 +81,7 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
           aria-label={t('chat.newMessage')}
           autoComplete="off"
         />
+        <div className="invalid-tooltip">{t(formik.errors.body || '')}</div>
         <Button
           type="submit"
           variant="group-vertical"

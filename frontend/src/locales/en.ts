@@ -48,6 +48,7 @@ export default {
       messageCount_other: 'messages',
       newMessage: 'New message',
       enterNewMessage: 'Enter new message...',
+      messageTooLong: 'Message too long. Max limit: 100 characters',
     },
     signup: {
       required: 'Required',

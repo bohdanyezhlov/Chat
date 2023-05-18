@@ -49,6 +49,8 @@ export default {
       messageCount_many: 'сообщений',
       newMessage: 'Новое сообщение',
       enterNewMessage: 'Введите новое сообщение...',
+      messageTooLong:
+        'Сообщение слишком длинное. Максимальный лимит: 100 символов',
     },
     signup: {
       required: 'Обязательное поле',

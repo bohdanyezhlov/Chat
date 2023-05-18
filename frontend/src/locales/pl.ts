@@ -49,6 +49,7 @@ export default {
       messageCount_many: 'wiadomości',
       newMessage: 'Nowa wiadomość',
       enterNewMessage: 'Wprowadź nową wiadomość...',
+      messageTooLong: 'Wiadomość jest zbyt długa. Maksymalny limit: 100 znaków',
     },
     signup: {
       required: 'Pole wymagane',
