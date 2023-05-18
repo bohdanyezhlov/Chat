@@ -1,7 +1,7 @@
-lint-frontend:
+lint:
 	make -C frontend lint
 
-test-frontend:
+test:
 	make -C frontend test
 
 install:
@@ -12,9 +12,6 @@ start-frontend:
 
 start-backend:
 	npx start-server
-
-deploy:
-	git push heroku main
 
 start:
 	make start-backend & make start-frontend
