@@ -53,11 +53,7 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
       }
     },
   });
-  console.log(
-    formik.errors.body === t('chat.messageTooLong'),
-    formik.errors.body,
-    t('chat.messageTooLong')
-  );
+
   const inputClass = cn('border-0 p-0 ps-2', {
     'text-white': currentTheme === 'dark',
     'text-dark': currentTheme === 'light',
