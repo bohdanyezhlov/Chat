@@ -46,6 +46,7 @@ export interface Message {
   body: string;
   channelId: number;
   username: string;
+  createdAt: string;
 }
 
 export interface MessageProps {

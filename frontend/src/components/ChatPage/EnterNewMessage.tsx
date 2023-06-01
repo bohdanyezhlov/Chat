@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import { useFormik } from 'formik';
 import leoProfanity from 'leo-profanity';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +23,7 @@ const validationSchema = object().shape({
 const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [focus, setFocus] = useState(false);
   const auth = useAuth() as AuthType;
   const { sendMessage } = useSocket() as SocketApiType;
   const currentTheme = useSelector(
@@ -31,15 +32,17 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
 
   useEffect(() => {
     inputRef.current?.focus();
-  }, [channelId]);
+  }, [channelId, focus]);
 
   const formik = useFormik({
     initialValues: { body: '' },
     validationSchema,
     onSubmit: async ({ body }) => {
+      setFocus(false);
       const filteredBody = leoProfanity.clean(body);
       const message = {
         body: filteredBody,
+        createdAt: new Date(),
         channelId,
         username: auth.user?.username || '', // FIXME: ?
       };
@@ -47,6 +50,7 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
       try {
         await sendMessage(message);
         formik.resetForm();
+        setFocus(true);
       } catch (error) {
         console.log(error);
         formik.setSubmitting(false);
@@ -54,12 +58,18 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
     },
   });
 
-  const inputClass = cn('border-0 p-0 ps-2', {
+  const inputClass = cn('border-0 p-0 ps-2 shadow-none', {
     'text-white': currentTheme === 'dark',
     'text-dark': currentTheme === 'light',
     'bg-dark': currentTheme === 'dark',
     'bg-light': currentTheme === 'light',
     'is-invalid': formik.errors.body === 'chat.messageTooLong',
+  });
+
+  const buttonIconClass = cn('', {
+    'text-success': !formik.isSubmitting && formik.isValid && formik.dirty,
+    'text-white': currentTheme === 'dark' && !(formik.isValid && formik.dirty),
+    'text-dark': currentTheme === 'light' && !(formik.isValid && formik.dirty),
   });
 
   return (
@@ -81,12 +91,10 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
         <Button
           type="submit"
           variant="group-vertical"
+          className="border-0"
           disabled={!formik.isValid || !formik.dirty}
         >
-          <ArrowRightSquare
-            size={20}
-            className={currentTheme === 'light' ? 'text-dark' : 'text-light'}
-          />
+          <ArrowRightSquare size={20} className={buttonIconClass} />
           <span className="visually-hidden">{t('chat.send')}</span>
         </Button>
       </InputGroup>

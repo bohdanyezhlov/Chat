@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -7,13 +8,35 @@ import {
   getCurrentChannelName,
   getMessagesForCurrentChannel,
 } from '../../selectors';
-import { MessageProps, Message as MessageType } from '../../types';
+import { MessageProps, Message as MessageType, RootState } from '../../types';
 import EnterNewMessage from './EnterNewMessage';
 
 const Message = ({ message }: MessageProps) => {
+  const currentTheme = useSelector(
+    (state: RootState) => state.theme.currentTheme
+  );
+
+  const formatMessageTime = (timeString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      hour: 'numeric',
+      minute: 'numeric',
+    };
+    const date = new Date(timeString);
+    return date.toLocaleString(undefined, options);
+  };
+
+  const messageClass = cn('text-break', 'mb-2', 'p-1', 'border', 'shadow', {
+    'border-white': currentTheme === 'light',
+    'border-dark': currentTheme === 'dark',
+  });
+
   return (
-    <div className="text-break mb-2">
-      <strong>{message.username}</strong>: {message.body}
+    <div className={messageClass}>
+      <strong>{message.username}</strong>
+      <span className="text-muted ms-2 small">
+        {formatMessageTime(message.createdAt)}
+      </span>
+      <p className="m-0">{message.body}</p>
     </div>
   );
 };
