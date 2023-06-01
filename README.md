@@ -1,4 +1,4 @@
-# Chat app (Slack)
+# [Chat app (Slack)](https://bohdanyezhlov.up.railway.app/)
 [![Maintainability](https://api.codeclimate.com/v1/badges/fd2e1d9f5c4055dc0e64/maintainability)](https://codeclimate.com/github/Bohdan2241/frontend-project-12/maintainability)
 ![Linter](https://github.com/bohdanyezhlov/chat/actions/workflows/linter.yml/badge.svg)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
@@ -11,6 +11,16 @@ SPA Chat is a simple messaging application built using React, Redux Toolkit, For
 - Start local server: `make start`
 - Lint code: `make lint`
 - Test code: `make test`
+
+## Languages supported:
+- English
+- Ukrainian
+- Polish
+- Russian
+
+## Pre-created user:
+- Login: `admin`
+- Password: `admin`
 
 ## Demo:
 https://bohdanyezhlov.up.railway.app/
