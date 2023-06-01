@@ -43,10 +43,10 @@ export default {
     logout: 'Вийти',
     chat: {
       send: 'Надіслати',
-      messageCount_zero: 'повідомлень',
       messageCount_one: 'повідомлення',
       messageCount_few: 'повідомлення',
       messageCount_many: 'повідомлень',
+      messageCount_other: 'повідомлень',
       newMessage: 'Нове повідомлення',
       enterNewMessage: 'Введіть нове повідомлення...',
       messageTooLong:

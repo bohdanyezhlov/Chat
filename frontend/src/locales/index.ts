@@ -1,11 +1,11 @@
 import en from './en';
 import pl from './pl';
 import ru from './ru';
-import ua from './ua';
+import uk from './uk';
 
 export default {
   ru,
   en,
-  ua,
+  uk,
   pl,
 };

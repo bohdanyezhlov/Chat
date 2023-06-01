@@ -83,8 +83,8 @@ const LangSwitcher = () => {
         </Dropdown.Item>
         <Dropdown.Item
           as={Button}
-          onClick={handleChangeLanguage('ua')}
-          active={i18n.language === 'ua'}
+          onClick={handleChangeLanguage('uk')}
+          active={i18n.language === 'uk'}
         >
           {t('ukrainian')}
         </Dropdown.Item>
