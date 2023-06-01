@@ -31,8 +31,8 @@ const CustomButton = (props: CustomButtonProps) => {
   );
 
   const btnClass = cn('w-100', 'rounded-start', 'text-start', 'text-truncate', {
-    'text-white': currentTheme === 'dark',
-    'text-dark': currentTheme === 'light',
+    'text-white': currentTheme === 'dark' || variant === 'primary',
+    'text-dark': currentTheme === 'light' && variant !== 'primary',
   });
 
   return (

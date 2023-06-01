@@ -1,14 +1,15 @@
 import axios, { AxiosError } from 'axios';
+import cn from 'classnames';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../hooks';
 import routes from '../../routes';
 import { setInitialState } from '../../slices/channelsSlice';
-import { AuthType } from '../../types';
+import { AuthType, RootState } from '../../types';
 import Loading from '../Loading';
 import Channels from './Channels';
 import Messages from './Messages';
@@ -19,6 +20,9 @@ const ChatPage = () => {
   const dispatch = useDispatch();
   const { getAuthHeader } = useAuth() as AuthType;
   const [isLoading, setIsLoading] = useState(true);
+  const currentTheme = useSelector(
+    (state: RootState) => state.theme.currentTheme
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,12 +52,26 @@ const ChatPage = () => {
     fetchData();
   }, [getAuthHeader, dispatch, navigate, t]);
 
+  const wrapperClass = cn(
+    'col-4',
+    'col-md-2',
+    'px-0',
+    'flex-column',
+    'h-100',
+    'd-flex',
+    'border-end',
+    {
+      'border-dark': currentTheme === 'dark',
+      shadow: currentTheme === 'dark',
+    }
+  );
+
   return isLoading ? (
     <Loading />
   ) : (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 flex-md-row">
-        <div className="col-4 col-md-2 border-end px-0 flex-column h-100 d-flex">
+        <div className={wrapperClass}>
           <Channels />
         </div>
         <div className="col p-0 h-100">
