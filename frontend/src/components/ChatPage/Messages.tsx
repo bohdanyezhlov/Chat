@@ -18,10 +18,13 @@ const Message = ({ message }: MessageProps) => {
 
   const formatMessageTime = (timeString: string) => {
     const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
       hour: 'numeric',
       minute: 'numeric',
     };
     const date = new Date(timeString);
+
     return date.toLocaleString(undefined, options);
   };
 
