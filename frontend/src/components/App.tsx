@@ -22,7 +22,7 @@ const ChatPage = lazy(() => import('./ChatPage/ChatPage'));
 const NotFoundPage = lazy(() => import('./NotFoundPage'));
 const SignupPage = lazy(() => import('./SignupPage'));
 
-const AuthProvider = ({ children }: ChildrenProps) => {
+export const AuthProvider = ({ children }: ChildrenProps) => {
   const userJson = localStorage.getItem('user');
   const currentUser = userJson ? JSON.parse(userJson) : null;
 
