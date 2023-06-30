@@ -1,5 +1,3 @@
-import { CombinedState } from '@reduxjs/toolkit';
-
 export type ChildrenProps = {
   children: React.ReactNode;
 };
@@ -84,13 +82,6 @@ export interface ChannelsState {
   channels: Channel[];
   currentChannelId: number;
 }
-
-export type RootState = CombinedState<{
-  channels: ChannelsState;
-  messages: MessagesState;
-  modal: ModalState;
-  theme: ThemeState;
-}>;
 
 export interface SendMessageData {
   body: string;
