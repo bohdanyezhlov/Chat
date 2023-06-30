@@ -1,4 +1,4 @@
-import { RootState } from './types';
+import { RootState } from './slices';
 
 export const getCurrentChannel = (state: RootState) => {
   const { channels, currentChannelId } = state.channels;
