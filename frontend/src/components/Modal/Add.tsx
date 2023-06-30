@@ -3,24 +3,21 @@ import leoProfanity from 'leo-profanity';
 import { useEffect, useRef } from 'react';
 import { Button, Form, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { useSocket } from '../../hooks';
+import { useAppDispatch, useAppSelector, useSocket } from '../../hooks';
 import { getChannelsNames } from '../../selectors';
 import { setCurrentChannel } from '../../slices/channelsSlice';
-import { AddProps, RootState, SocketApiType } from '../../types';
+import { AddProps, SocketApiType } from '../../types';
 import validationSchema from './validationSchema';
 
 const Add = (props: AddProps) => {
   const { t } = useTranslation();
   const { handleClose } = props;
   const { addChannel } = useSocket() as SocketApiType;
-  const channelsNames = useSelector(getChannelsNames);
-  const dispatch = useDispatch();
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const channelsNames = useAppSelector(getChannelsNames);
+  const dispatch = useAppDispatch();
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

@@ -2,14 +2,13 @@ import axios, { AxiosError } from 'axios';
 import cn from 'classnames';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { useAuth } from '../../hooks';
+import { useAppDispatch, useAppSelector, useAuth } from '../../hooks';
 import routes from '../../routes';
 import { setInitialState } from '../../slices/channelsSlice';
-import { AuthType, RootState } from '../../types';
+import { AuthType } from '../../types';
 import Loading from '../Loading';
 import Channels from './Channels';
 import Messages from './Messages';
@@ -17,12 +16,10 @@ import Messages from './Messages';
 const ChatPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { getAuthHeader } = useAuth() as AuthType;
   const [isLoading, setIsLoading] = useState(true);
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
 
   useEffect(() => {
     const fetchData = async () => {

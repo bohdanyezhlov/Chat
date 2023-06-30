@@ -1,21 +1,18 @@
 import { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { useSocket } from '../../hooks';
-import { RemoveProps, RootState, SocketApiType } from '../../types';
+import { useAppSelector, useSocket } from '../../hooks';
+import { RemoveProps, SocketApiType } from '../../types';
 
 const Remove = (props: RemoveProps) => {
   const { t } = useTranslation();
   const { removeChannel } = useSocket() as SocketApiType;
   const [loading, setLoading] = useState(false);
   const { handleClose } = props;
-  const id = useSelector((state: RootState) => state.modal.info);
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const id = useAppSelector((state) => state.modal.info);
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
 
   const handleSubmit = async () => {
     setLoading(true);

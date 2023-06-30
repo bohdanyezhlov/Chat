@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Navbar as BootstrapNavbar, Button, Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { useAuth } from '../hooks';
+import { useAppDispatch, useAppSelector, useAuth } from '../hooks';
 import routes from '../routes';
 import { setTheme } from '../slices/themeSlice';
-import { AuthType, RootState } from '../types';
+import { AuthType } from '../types';
 
 const getBodyClass = (theme: string) => {
   const dark = 'text-white bg-dark h-100';
@@ -17,10 +16,8 @@ const getBodyClass = (theme: string) => {
 };
 
 const ThemeSwitcher = () => {
-  const dispatch = useDispatch();
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const dispatch = useAppDispatch();
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
   const [bodyClass, setBodyClass] = useState(currentTheme);
 
   useEffect(() => {
@@ -122,9 +119,7 @@ const AuthButton = () => {
 
 const Navbar = () => {
   const { t } = useTranslation();
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
 
   return (
     <BootstrapNavbar expand="lg" className="shadow-sm" variant={currentTheme}>

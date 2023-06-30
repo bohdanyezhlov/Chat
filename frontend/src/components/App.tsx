@@ -1,5 +1,4 @@
 import { Suspense, lazy, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   Navigate,
   Route,
@@ -10,9 +9,9 @@ import {
 import { ToastContainer } from 'react-toastify';
 
 import { AuthContext } from '../contexts';
-import { useAuth } from '../hooks';
+import { useAppSelector, useAuth } from '../hooks';
 import routes from '../routes';
-import { AuthType, ChildrenProps, RootState, UserData } from '../types';
+import { AuthType, ChildrenProps, UserData } from '../types';
 import Loading from './Loading';
 import LoginPage from './LoginPage';
 import Modal from './Modal/Modal';
@@ -74,9 +73,7 @@ const PrivateRoute = ({ children }: ChildrenProps) => {
 };
 
 const App = () => {
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
 
   return (
     <AuthProvider>

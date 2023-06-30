@@ -5,16 +5,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { ArrowRightSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { object, string } from 'yup';
 
-import { useAuth, useSocket } from '../../hooks';
-import {
-  AuthType,
-  EnterNewMessageProps,
-  RootState,
-  SocketApiType,
-} from '../../types';
+import { useAppSelector, useAuth, useSocket } from '../../hooks';
+import { AuthType, EnterNewMessageProps, SocketApiType } from '../../types';
 
 const validationSchema = object().shape({
   body: string().trim().required('required').max(100, 'chat.messageTooLong'),
@@ -26,9 +20,7 @@ const EnterNewMessage = ({ channelId }: EnterNewMessageProps) => {
   const [focus, setFocus] = useState(false);
   const auth = useAuth() as AuthType;
   const { sendMessage } = useSocket() as SocketApiType;
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
 
   useEffect(() => {
     inputRef.current?.focus();

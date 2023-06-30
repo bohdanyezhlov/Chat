@@ -4,14 +4,13 @@ import { useFormik } from 'formik';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import loginImage from '../assets/loginImage.jpg';
-import { useAuth } from '../hooks';
+import { useAppSelector, useAuth } from '../hooks';
 import routes from '../routes';
-import { AuthType, RootState } from '../types';
+import { AuthType } from '../types';
 
 const Login = () => {
   const auth = useAuth() as AuthType;
@@ -20,9 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
 
   useEffect(() => {
     inputRef.current?.focus();

@@ -1,20 +1,18 @@
 import cn from 'classnames';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 
+import { useAppSelector } from '../../hooks';
 import {
   getCurrentChannel,
   getCurrentChannelName,
   getMessagesForCurrentChannel,
 } from '../../selectors';
-import { MessageProps, Message as MessageType, RootState } from '../../types';
+import { MessageProps, Message as MessageType } from '../../types';
 import EnterNewMessage from './EnterNewMessage';
 
 const Message = ({ message }: MessageProps) => {
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
 
   const formatMessageTime = (timeString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -47,9 +45,9 @@ const Message = ({ message }: MessageProps) => {
 const Messages = () => {
   const { t } = useTranslation();
   const latestMessageRef = useRef<HTMLDivElement>(null);
-  const channel = useSelector(getCurrentChannel);
-  const messages = useSelector(getMessagesForCurrentChannel);
-  const channelName = useSelector(getCurrentChannelName(channel?.id));
+  const channel = useAppSelector(getCurrentChannel);
+  const messages = useAppSelector(getMessagesForCurrentChannel);
+  const channelName = useAppSelector(getCurrentChannelName(channel?.id));
 
   useEffect(() => {
     latestMessageRef.current?.scrollIntoView({ behavior: 'auto' });

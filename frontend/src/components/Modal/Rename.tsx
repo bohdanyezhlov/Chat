@@ -3,24 +3,21 @@ import leoProfanity from 'leo-profanity';
 import { useEffect, useRef } from 'react';
 import { Button, Form, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { useSocket } from '../../hooks';
+import { useAppSelector, useSocket } from '../../hooks';
 import { getChannelsNames, getCurrentChannelName } from '../../selectors';
-import { RenameProps, RootState, SocketApiType } from '../../types';
+import { RenameProps, SocketApiType } from '../../types';
 import validationSchema from './validationSchema';
 
 const Rename = (props: RenameProps) => {
   const { handleClose } = props;
-  const id = useSelector((state: RootState) => state.modal.info);
-  const channelsNames = useSelector(getChannelsNames);
-  const currentChannelName = useSelector(getCurrentChannelName(id));
+  const id = useAppSelector((state) => state.modal.info);
+  const channelsNames = useAppSelector(getChannelsNames);
+  const currentChannelName = useAppSelector(getCurrentChannelName(id));
   const { t } = useTranslation();
   const { renameChannel } = useSocket() as SocketApiType;
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

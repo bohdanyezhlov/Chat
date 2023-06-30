@@ -9,8 +9,8 @@ import {
 } from 'react-bootstrap';
 import { PlusSquare } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getLastChannelId } from '../../selectors';
 import {
   defaultCurrentChannelId,
@@ -21,14 +21,11 @@ import {
   ChannelProps,
   Channel as ChannelType,
   CustomButtonProps,
-  RootState,
 } from '../../types';
 
 const CustomButton = (props: CustomButtonProps) => {
   const { handleSetCurrentChannel, channel, variant } = props;
-  const currentTheme = useSelector(
-    (state: RootState) => state.theme.currentTheme
-  );
+  const currentTheme = useAppSelector((state) => state.theme.currentTheme);
 
   const btnClass = cn('w-100', 'rounded-start', 'text-start', 'text-truncate', {
     'text-white': currentTheme === 'dark' || variant === 'primary',
@@ -100,11 +97,11 @@ const Channels = () => {
   const { t } = useTranslation();
   const currentChannelRef = useRef<HTMLDivElement>(null);
   const defaultChannelRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
-  const { channels, currentChannelId } = useSelector(
-    (state: RootState) => state.channels
+  const dispatch = useAppDispatch();
+  const { channels, currentChannelId } = useAppSelector(
+    (state) => state.channels
   );
-  const lastChannelId = useSelector(getLastChannelId);
+  const lastChannelId = useAppSelector(getLastChannelId);
 
   useEffect(() => {
     if (currentChannelId === defaultCurrentChannelId) {
