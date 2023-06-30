@@ -1,4 +1,4 @@
-import { Store, configureStore } from '@reduxjs/toolkit';
+import { Store } from '@reduxjs/toolkit';
 import i18next from 'i18next';
 import detector from 'i18next-browser-languagedetector';
 import leoProfanity from 'leo-profanity';
@@ -9,7 +9,7 @@ import { io } from 'socket.io-client';
 import App from './components/App';
 import { SocketContext } from './contexts';
 import resources from './locales';
-import reducer from './slices';
+import { store } from './slices';
 import {
   addChannel,
   removeChannel,
@@ -27,23 +27,23 @@ import {
   SocketResponseType,
 } from './types';
 
-const socketInit = (store: Store) => {
+const socketInit = (appStore: Store) => {
   const socket = io();
 
   socket.on('newMessage', (payload: Message) => {
-    store.dispatch(addMessage({ message: payload }));
+    appStore.dispatch(addMessage({ message: payload }));
   });
 
   socket.on('newChannel', (payload: Channel) => {
-    store.dispatch(addChannel({ channel: payload }));
+    appStore.dispatch(addChannel({ channel: payload }));
   });
 
   socket.on('removeChannel', (payload: { id: number }) => {
-    store.dispatch(removeChannel({ currentChannelId: payload }));
+    appStore.dispatch(removeChannel({ currentChannelId: payload }));
   });
 
   socket.on('renameChannel', (payload: Channel) => {
-    store.dispatch(renameChannel({ updatedChannel: payload }));
+    appStore.dispatch(renameChannel({ updatedChannel: payload }));
   });
 
   const asyncEmit = (eventName: string, data: SocketEventData) =>
@@ -74,10 +74,6 @@ const socketInit = (store: Store) => {
 
   return socketApi;
 };
-
-export const store = configureStore({
-  reducer,
-});
 
 const init = async () => {
   const i18n = i18next.createInstance();
