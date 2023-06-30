@@ -8,8 +8,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { describe, expect, it, vi } from 'vitest';
 
-import { store } from '../init';
 import routes from '../routes';
+import { store } from '../slices';
 import { AuthProvider } from './App';
 import LoginPage from './LoginPage';
 import Navbar from './Navbar';

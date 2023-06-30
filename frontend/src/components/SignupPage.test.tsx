@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 
-import { store } from '../init';
+import { store } from '../slices';
 import SignupPage from './SignupPage';
 
 describe('SignupPage', () => {
