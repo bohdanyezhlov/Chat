@@ -128,3 +128,15 @@ export type CustomButtonProps = {
 export interface ModalTypes {
   [key: string]: React.ComponentType<AddProps | RemoveProps | RenameProps>;
 }
+
+export interface SetInitialState {
+  channels: Channel[];
+  messages: Message[];
+  currentChannelId: number;
+}
+
+export interface RemoveChannel {
+  currentChannelId: {
+    id: number;
+  };
+}

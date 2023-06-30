@@ -1,7 +1,12 @@
 /* eslint-disable no-param-reassign */
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { ModalState } from '../types';
+
+interface OpenModal {
+  type: string;
+  info?: number;
+}
 
 const initialState: ModalState = {
   isOpened: false,
@@ -13,8 +18,8 @@ const modalReducer = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    openModal(state, { payload }) {
-      const { type, info } = payload;
+    openModal(state, action: PayloadAction<OpenModal>) {
+      const { type, info } = action.payload;
       state.isOpened = true;
       state.type = type;
       state.info = info ?? null;
