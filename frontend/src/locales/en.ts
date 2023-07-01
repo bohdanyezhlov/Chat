@@ -36,7 +36,7 @@ export default {
       confirmation: 'Are you sure?',
       confirm: 'Confirm',
       rename: 'Rename channel',
-      channelName: 'Chanel name',
+      channelName: 'Channel name',
       editChannelName: 'New channel name',
     },
     logoChat: 'Chat App',
