@@ -6,25 +6,13 @@ import { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import routes from '../routes';
 import { store } from '../slices';
 import { AuthProvider } from './App';
 import LoginPage from './LoginPage';
 import Navbar from './Navbar';
-
-vi.mock('react-i18next', () => ({
-  useTranslation: () => {
-    return {
-      t: (str: string) => str,
-      i18n: {
-        changeLanguage: () => new Promise(() => {}),
-        language: 'en-US',
-      },
-    };
-  },
-}));
 
 describe('Login', () => {
   const user = userEvent.setup();
@@ -128,7 +116,7 @@ describe('Login', () => {
     await user.type(passwordInput, 'correctPassword');
     await user.click(submitButton);
 
-    const errorTooltip = await screen.findByRole('button', { name: 'logout' });
-    expect(errorTooltip).toBeInTheDocument();
+    const logoutButton = await screen.findByRole('button', { name: 'logout' });
+    expect(logoutButton).toBeInTheDocument();
   });
 });
