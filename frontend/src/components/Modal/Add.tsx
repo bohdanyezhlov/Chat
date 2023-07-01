@@ -60,7 +60,7 @@ const Add = (props: AddProps) => {
 
       <Modal.Body className={`bg-${currentTheme}`}>
         <form onSubmit={formik.handleSubmit}>
-          <FormGroup>
+          <FormGroup controlId="channelName">
             <FormControl
               className="mb-2"
               disabled={formik.isSubmitting}
@@ -71,7 +71,7 @@ const Add = (props: AddProps) => {
               name="name"
               isInvalid={!!formik.errors.name && formik.touched.name}
             />
-            <Form.Label className="visually-hidden" htmlFor="name">
+            <Form.Label className="visually-hidden">
               {t('modals.channelName')}
             </Form.Label>
             <div className="invalid-feedback">
