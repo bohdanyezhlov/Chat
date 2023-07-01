@@ -140,6 +140,7 @@ const Channels = () => {
           }
         >
           <Button
+            data-testid="add-channel"
             type="button"
             variant="group-vertical"
             className="p-0 text-primary"
