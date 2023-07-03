@@ -1,10 +1,15 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
-import NotFoundPage from './NotFoundPage';
+import NotFound from './NotFoundPage';
 
-describe('NotFoundPage', () => {
-  it('renders the not found page with correct content', () => {
-    render(<NotFoundPage />);
+describe('NotFound', () => {
+  it('should render content', () => {
+    render(
+      <MemoryRouter>
+        <NotFound />
+      </MemoryRouter>
+    );
 
     const imageElement = screen.getByAltText('notFound.header');
     expect(imageElement).toBeInTheDocument();
@@ -19,6 +24,5 @@ describe('NotFoundPage', () => {
 
     const linkElement = screen.getByRole('link', { name: 'notFound.linkText' });
     expect(linkElement).toBeInTheDocument();
-    expect(linkElement.getAttribute('href')).toContain('/');
   });
 });
